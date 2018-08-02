@@ -20,7 +20,7 @@ export default {
       'pages/switchlist/main',
       'pages/switchoption/main',
       'pages/operator/main',
-      'pages/aboutetail/main',
+      // 'pages/aboutetail/main',
       'pages/instruction/main'
     ],
     window: {

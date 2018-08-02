@@ -1,1 +1,0 @@
-<import src="../../components/switchlist$745acb01" /><template is="switchlist$745acb01" data="{{ ...$root['0'], $root }}"/>
