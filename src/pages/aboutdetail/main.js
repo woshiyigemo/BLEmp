@@ -1,4 +1,4 @@
 
 require('../../static/js/manifest')
 require('../../static/js/vendor')
-require('../../static/js/pages/switchlist/main')
+require('../../static/js/pages/aboutDetail/main')

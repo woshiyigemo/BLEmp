@@ -1,0 +1,1 @@
+<import src="../../components/switchoption$03aef018" /><template is="switchoption$03aef018" data="{{ ...$root['0'], $root }}"/>
