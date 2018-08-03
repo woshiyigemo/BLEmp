@@ -11,7 +11,7 @@
                       1.首次使用时，请点击左上角加号按钮来搜索和新增设备。新增的设备在配对成功后将保存在手机上，小程序再次启动时将直接可见。
                   </div>
                   <div class="weui-article__p">
-                      <image mode="widthFix" :src="imgSrc.img1"></image>
+                      <img mode="widthFix" class="w100" src="../../images/static/1.png"/>
                   </div>
             </div>
             <div class="weui-article__section">
@@ -19,7 +19,7 @@
                       2.点击新设备进行蓝牙连接，第一次连接时系统会弹出蓝牙配对密码(PIN)的输入提示，出厂默认密码为888888。
                   </div>
                   <div class="weui-article__p">
-                      <image mode="widthFix" src="../../images/static/2.png"></image>
+                      <img mode="widthFix"  class="w100" src="../../images/static/2.png"/>
                   </div>
             </div>
             <div class="weui-article__section">
@@ -27,7 +27,7 @@
                       3.配对成功后进入开关控制界面，点击右侧圆形电源按钮来打开和关闭电灯。点击下方列表按钮可返回列表页面以连接其他设备。当连接多个设备时，可在控制界面滑动切换设备。
                   </div>
                   <div class="weui-article__p">
-                      <image mode="widthFix" src="../../images/static/3.png"></image>
+                      <img mode="widthFix" class="w100" src="../../images/static/3.png"/>
                   </div>
             </div>
             <div class="weui-article__section">
@@ -38,7 +38,7 @@
                       5.在控制界面中，点击左上方的齿轮按钮可以进入开关设置界面。静音：打开/关闭面板的操作提示音；强背光：打开/关闭面板的开灯背光；弱背光：打开/关闭面板的关灯背光；信号增强：打开/关闭面板的蓝牙信号增强功能；更新：更新开关面板固件；列表区可以修改各个电灯的具体名称。设置完成后，点击页面下方保存按钮返回控制界面。
                   </div>
                   <div class="weui-article__p">
-                      <image mode="widthFix" src="../../images/static/4.png"></image>
+                      <img mode="widthFix" class="w100" src="../../images/static/4.png"/>
                   </div>
             </div>
             <div class="weui-article__section">
@@ -55,22 +55,11 @@
 	</div>  
 </template>
 <script>
-// 静态资源
-import img1 from '@/images/static/1.png'
-import img2 from '@/images/static/2.png'
-import img3 from '@/images/static/3.png'
-import img4 from '@/images/static/4.png'
-import img5 from '@/images/static/4.png'
 
   export default {
     data () {
       return {
-        imgSrc:{
-          img1:img1,
-          img2:img2,
-          img3:img3,
-          img4:img4
-        }
+        imgMode:'widthFix'
       }
     },
     methods: {

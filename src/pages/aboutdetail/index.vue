@@ -3,7 +3,7 @@
 		<div class="page__bd">
       <div class="weui-article">
         <div class="weui-article__section">
-            <image mode="widthFix" src="../images/static/logo.png"></image>
+            <img mode="widthFix" class="w100" src="../../images/static/logo.png"/>
         </div>
         <div class="weui-article__section">
           <div class="weui-article__section">
