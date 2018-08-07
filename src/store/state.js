@@ -1,7 +1,7 @@
 const state = {
   mpvueInfo: '基于 Vue.js 的小程序开发框架，从底层支持 Vue.js 语法和构建工具体系。',
-  // 开关全局
-  switchList: []
+  switchList: {}, // 开关全局
+  bleAvailable: false // 开关全局
 }
 
-export default state;
+export default state

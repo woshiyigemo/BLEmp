@@ -60,18 +60,17 @@ export default {
     }
   },
   computed:{
-      ...mapState({
-        switchList:state => {
-           var slist = []
-            for (var i in state.switchList) {
-              if (state.switchList[i].deviceId) {
-                slist.push(state.switchList[i])
-              }
+    ...mapState({
+      switchList:state => {
+          var slist = []
+          for (var i in state.switchList) {
+            if (state.switchList[i].deviceId) {
+              slist.push(state.switchList[i])
             }
-            return slist
-        }
-      })
-      
+          }
+          return slist
+      }
+    })
   },
   components: {
     bottomNav,
@@ -86,18 +85,19 @@ export default {
         mask:true
       })
       // 先断开所有设备并关闭蓝牙适配器(安卓)
-      this.disConnAll()
-      .then((res) => {
-         console.log("尝试断开设备完毕")
-         return this.scanDeviceManual()
-      }).then((res) => {
-        console.log("新设备扫描完毕",res)
-        wx.hideLoading()
-      }).catch(function(err){
-        console.log("新设备扫描设备发生错误1",err)
-        // this.errHandler(err)
-        wx.hideLoading()
-      })
+      // this.disConnAll()
+      // .then((res) => {
+      //    console.log("尝试断开设备完毕")
+      //    return this.scanDeviceManual()
+      // }).then((res) => {
+      //   console.log("新设备扫描完毕",res)
+      //   wx.hideLoading()
+      // }).catch(function(err){
+      //   console.log("新设备扫描设备发生错误1",err)
+      //   // this.errHandler(err)
+      //   wx.hideLoading()
+      // })
+      this.scanDeviceManual()
     },
     // 自动刷新
     refreshAutoScan (e) {
@@ -135,13 +135,15 @@ export default {
 
     }
   },
-
+  mounted(e){
+    console.log('参数', e)
+  },
   created () {
     // 调用应用实例的方法获取全局数据
     // this.getUserInfo()
   },
-  onLoad () {
-    console.log('page loaded')
+  onLoad (e) {
+    console.log('page loaded', e)
   }
 }
 </script>

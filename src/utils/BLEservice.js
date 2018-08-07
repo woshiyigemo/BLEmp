@@ -1,3 +1,5 @@
+import Comm from '@/utils/common.js'
+import store from '@/store'
 // 微信蓝牙封装，依赖于wx对象
 
 // 停止扫描
@@ -38,10 +40,10 @@ const disconDevice = function (device) {
   return new Promise(function(resolve, reject) {
     wx.closeBLEConnection({
       deviceId: device.deviceId,
-      success: function(res) {
+      success: function (res) {
         resolve(res)
       },
-      fail: function(err) {
+      fail: function (err) {
         reject({errMsg: '断开蓝牙连接时发生错误', errInfo: err})
       }
     })
@@ -234,6 +236,38 @@ const writeBLECharacteristicValue = function (dId, sId, cId, val) {
   })
 }
 
+// 添加特征值变化监听
+const addCharacteristicValueChangeListener = function() {
+  wx.onBLECharacteristicValueChange(res => {
+    // 灯设置
+    if (res.characteristicId == Comm.SampleGattAttributes.SIMPLEIO_CHAR1_CHARACTERISTIC) {
+      console.log("当前设置状态")
+      console.log(res.value)
+      // self.updateSwitchOption(res.value)
+    }
+    // 灯状态
+    else if(res.characteristicId == Comm.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC) {
+      console.log("当前为读取状态",res)
+      store.dispatch('changeLightState', res,deviceId, res.value)
+    }
+    // OAD服务
+    else if(res.characteristicId == Comm.SampleGattAttributes.OAD_IMAGE_NOTIFY_CHAR) {
+      console.log("当前为OAD服务",res)
+      // self.updateFrameWare(res.value)
+    }
+  })
+}
+
+const foundDevice = function () {
+  wx.onBluetoothDeviceFound(res => {
+    var dev = res.devices[0]
+    console.log('发现设备', dev)
+    if (dev.name === 'LOLAR_SWITCH') {
+      store.dispatch('addSwitch', res.devices[0])
+    }
+  })
+}
+
 export default {
   openBluetoothAdapter,
   getBluetoothAdapterState,
@@ -246,5 +280,7 @@ export default {
   disconDevice,
   readBLECharacteristicValue,
   writeBLECharacteristicValue,
+  addCharacteristicValueChangeListener,
+  foundDevice,
   stopScan
 }

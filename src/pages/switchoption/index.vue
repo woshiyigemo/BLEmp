@@ -86,27 +86,36 @@
 
 <script>
 import BLEpub from '@/mixin/BLEpub.js'
-
+import BLE from '@/utils/BLEservice'
+import { mapState, mapGetters} from 'vuex'
 export default  {
+
   data: function(){
     return {
       framewareUrl:'http://x.hao61.net/bluetemp/LOLAR-SW-180317.bin',
       frameTempUrl:'',
       optionsReady:false,
       pointer:null, // 开关指针
-      // device:null  // 开关副本
       device:null,
       deviceOption: {
-        version: '0.0.0',
-        mute: 0,
-        backlightStrong: false,
-        backlightWeak: true,
-        signalStrong: false
+        version: '0.0.0', // 版本
+        mute: 0,          // 静音
+        backlightStrong: false, // 强背光
+        backlightWeak: true,    // 弱背光
+        signalStrong: false     // 信号增强
       }
     }
   },
   computed: {
+    ...mapState({
+      switchItem:state => {
+        if(!state.switchList[this.deviceId]){
 
+          return
+        }
+        return state.switchList[this.deviceId]
+      }
+    })
   },
   mixins: [BLEpub],
   methods: {
@@ -459,8 +468,14 @@ export default  {
       }
       return false
     }
+    
+  },
+  mounted(e){
+      console.log('参数', e)
+  },
+  created(e){
+    console.log('参数2', e)
   }
-
 }
 </script>
 

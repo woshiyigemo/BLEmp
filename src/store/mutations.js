@@ -1,33 +1,37 @@
-import * as type from './mutation-types';
+import * as type from './mutation-types'
+import Vue from 'vue'
 const mutations = {
-  // [type.SET_MPVUEINFO](state, mpvueInfo) { // eslint-disable-line
-  //   state.mpvueInfo = mpvueInfo;
-  // },
+  openBle (state) {
+    state.bleAvailable = true
+  },
+  closeBle (state) {
+    state.bleAvailable = false
+  },
   // add switch
   addSwitch (state, device) {
-    state.switchList.push(device)
+    Vue.set(state.switchList, device.deviceId, device)
   },
   // delete
-  deleteSwitch (state, device) {
-    for (var i = state.switchList.length - 1; i >= 0; i++) {
-      if (state.switchList[i].deviceId === device.deviceId) {
-        state.switchList.splice(i, 1)
-      }
+  deleteSwitch (state, deviceId) {
+    if (state.switchList[deviceId]) {
+      // delete state.switchList[deviceId]
+      Vue.delete(state.switchList, deviceId)
     }
   },
   // change state 该方法只能修改status/localName/name
-  changeSwitchState (state, device) {
-    for (var i = state.switchList.length - 1; i >= 0; i++) {
-      if (state.switchList[i].deviceId === device.deviceId) {
-        state.switchList[i].status = device.status
-        state.switchList[i].localName = device.localName
-        state.switchList[i].name = device.name
-        break
-      }
+  changeSwitchState (state, {deviceId, device}) {
+    if (state.switchList[deviceId]) {
+      state.switchList[deviceId].status = device.status
+      state.switchList[deviceId].localName = device.localName
+      state.switchList[deviceId].name = device.name
     }
   },
   // change light
-  changeLightState (state, device, value) {
+  changeLightState (state, {deviceId, value}) {
+    if (!state.switchList[deviceId]) {
+      return
+    }
+    var device = state.switchList[deviceId]
     var dataView = new DataView(value)
     var lightsArr = device.lightList
     var lightState = dataView.getUint8(0)
@@ -87,12 +91,6 @@ const mutations = {
     console.log('查看device设备', device, device.lightList)
 
     // 更新状态
-    for (var i = state.switchList.length - 1; i >= 0; i++) {
-      if (state.switchList[i].deviceId === device.deviceId) {
-        state.switchList[i] = device
-        break
-      }
-    }
   }
 }
 
