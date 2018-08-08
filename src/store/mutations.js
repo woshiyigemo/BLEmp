@@ -14,7 +14,6 @@ const mutations = {
   // delete
   deleteSwitch (state, deviceId) {
     if (state.switchList[deviceId]) {
-      // delete state.switchList[deviceId]
       Vue.delete(state.switchList, deviceId)
     }
   },
@@ -28,9 +27,11 @@ const mutations = {
   },
   // change light
   changeLightState (state, {deviceId, value}) {
+    console.log('获取灯状态1', deviceId, state.switchList[deviceId])
     if (!state.switchList[deviceId]) {
       return
     }
+    
     var device = state.switchList[deviceId]
     var dataView = new DataView(value)
     var lightsArr = device.lightList
@@ -38,7 +39,7 @@ const mutations = {
     var optionState = dataView.getUint8(1)
     var hardwareVer = dataView.getUint8(2)
     var softwareVer = dataView.getUint8(3)
-
+    console.log('获取灯状态', device)
     var data = []
     data[0] = dataView.getUint8(1)
     // 获取灯数量

@@ -34,7 +34,7 @@ import BLE from '@/utils/BLEservice'
       }
     },
     computed:{
-      lightColor() {
+      lightColor:function() {
         console.log('获取灯颜色:',this.light.status, Comm.lightColor[this.light.status])
         return  'background-color:' + Comm.lightColor[this.light.status] + ';'
       }

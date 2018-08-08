@@ -17,6 +17,10 @@ const lightColorLightList = [
   '#9bd90a', // 打开
   '#ffb400' // 关闭
 ]
+const lightColor = {
+  0: '#ffb400', // 关闭
+  1: '#9bd90a' // 打开
+}
 // 等状态文案
 const statusText = {
   0: '已连接', // 已连接
@@ -53,14 +57,7 @@ const getColorByLightStatus = function (status) {
   var index = status % lightColorLightList.length
   return lightColorLightList[index]
 }
-const deleteSwitch = function (devId, switchList) {
-  for (var i = switchList.length - 1; i >= 0; i--) {
-    if (switchList[i].deviceId === devId) {
-      switchList.splice(i, 1)
-      break
-    }
-  }
-}
+// 开关类
 const Switch = function (dev) {
   this.localName = dev.localName || dev.name || Math.random().toString()
   this.name = dev.name
@@ -73,9 +70,10 @@ const Switch = function (dev) {
   // this.version = '0.0' // 默认版本号
   this.lightList = [new Light(0), new Light(1), new Light(2), new Light(3)]
 }
+// 等类
 const Light = function (index) {
   this.id = Math.random(0,1).toString(36).slice(2)
-  this.color = getColorByIndex(index)
+  // this.color = getColorByIndex(index)
   this.name = '灯' + (index + 1).toString()
 }
 
@@ -115,8 +113,8 @@ export default {
   getColorBySwitchStatus,
   getColorByLightStatus,
   createSwitch,
-  deleteSwitch,
   statusText,
   statusColor,
+  lightColor,
   share
 }

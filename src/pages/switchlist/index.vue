@@ -18,7 +18,6 @@
           <lampSwitch @afterConnectedSwitch="connectedSwitch" @deleteSwitch="deleteSwitch" :switchItem="item"></lampSwitch>
         </div>
         <div class="noswitch" v-if="switchList.length == 0">
-          <!-- <image class="noswitch-img" style="width:144px;height:144px;"  :src="imgSrc.noswitch3x"/> -->
           <img class="noswitch-img" style="width:144px;height:144px;"  src="../../images/@3x/noswitch@3x.png"/>
           <div class="noswitch-text">没有可连接的蓝牙设备</div>
         </div>
@@ -36,10 +35,6 @@
 </template>
 
 <script>
-// 静态资源
-import add3x from '@/images/@3x/add@3x.png'
-import refresh3x from '@/images/@3x/refresh@3x.png'
-import noswitch3x from '@/images/@3x/noswitch@3x.png'
 // 组件
 import bottomNav from '@/components/bottomNav'
 import lampSwitch from '@/components/lampSwitch'
@@ -50,25 +45,19 @@ import { mapState, mapGetters} from 'vuex'
 export default {
   data () {
     return {
-      imgSrc: {
-        add3x: add3x,
-        refresh3x: refresh3x,
-        noswitch3x: noswitch3x
-      },
-      // switchList: [],
       isRefreshing: false // 自动刷新
     }
   },
   computed:{
     ...mapState({
       switchList:state => {
-          var slist = []
-          for (var i in state.switchList) {
-            if (state.switchList[i].deviceId) {
-              slist.push(state.switchList[i])
-            }
+        var slist = []
+        for (var i in state.switchList) {
+          if (state.switchList[i].deviceId) {
+            slist.push(state.switchList[i])
           }
-          return slist
+        }
+        return slist
       }
     })
   },
@@ -85,19 +74,18 @@ export default {
         mask:true
       })
       // 先断开所有设备并关闭蓝牙适配器(安卓)
-      // this.disConnAll()
-      // .then((res) => {
-      //    console.log("尝试断开设备完毕")
-      //    return this.scanDeviceManual()
-      // }).then((res) => {
-      //   console.log("新设备扫描完毕",res)
-      //   wx.hideLoading()
-      // }).catch(function(err){
-      //   console.log("新设备扫描设备发生错误1",err)
-      //   // this.errHandler(err)
-      //   wx.hideLoading()
-      // })
-      this.scanDeviceManual()
+      this.disConnAll()
+      .then((res) => {
+         console.log("尝试断开设备完毕")
+         return this.scanDeviceManual()
+      }).then((res) => {
+        console.log("新设备扫描完毕",res)
+        wx.hideLoading()
+      }).catch(function(err){
+        console.log("新设备扫描设备发生错误1",err)
+        // this.errHandler(err)
+        wx.hideLoading()
+      })
     },
     // 自动刷新
     refreshAutoScan (e) {

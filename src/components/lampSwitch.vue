@@ -4,7 +4,7 @@
       <div class="colorbar" :style="switchColor"></div>
       <!-- <div class="colorbar" style="background-color:#ff0000;"></div> -->
       <div class="switch-name">{{switchItem.localName}}</div>
-      <div class="switch-status">{{switchItem.status}}</div>
+      <div class="switch-status">{{switchStatus}}</div>
     </div>
     <div class="switch-button">
       <image  style="width:24px;height:24px;" src="../images/@3x/info@3x.png"/>
@@ -14,6 +14,7 @@
 <script>
   import Comm from '@/utils/common' 
   import BLE from '@/utils/BLEservice'
+  import store from '@/store'
 
   export default {
     props:{
@@ -30,13 +31,15 @@
 
     data(){
       return {
-        statusText:Comm.statusText,
-        statusColor:Comm.statusColor
+
       }
     },
     computed:{
       switchColor: function () {
-        return  'background-color:' + this.statusText[this.switchItem.status] + ';'
+        return  'background-color:' + Comm.statusColor[this.switchItem.status] + ';'
+      },
+      switchStatus: function () {
+        return  Comm.statusText[this.switchItem.status]
       }
     },
     methods:{
@@ -77,7 +80,7 @@
         var self = this
         // 连接状态直接跳转 
         if(this.switchItem.status == 0){
-          this.$emit('connectSwitch',this.switchItem)
+          this.$emit('afterConnectedSwitch',this.switchItem)
         }
         // 未连接或新设备进行连接
         else if(this.switchItem.status == 1 || this.switchItem.status == 2){
@@ -88,14 +91,12 @@
           
           BLE.connectDevice(self.switchItem)
           .then((res) => {
-            
             self.switchItem.status = 0
-            self.$apply()
             console.log('连接success',res, self.switchItem)
-            this.$emit('connectSwitch',this.switchItem)
+            this.updatSwitchState()
+            this.$emit('afterConnectedSwitch',this.switchItem)
             wx.hideLoading()
           }).catch((err) => {
-            console.log('发生错误', err)
             wx.hideLoading()
           })
         }
@@ -106,7 +107,19 @@
             showCancel:false
           })
         }
-      }
+      },
+      // 更新
+      updatSwitchState() {
+        let dId = this.switchItem.deviceId
+        let sId = Comm.SampleGattAttributes.SIMPLEIO_SERVICE
+        let cId = Comm.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
+        BLE.readBLECharacteristicValue(dId,sId,cId)
+          .then(res => {
+
+          }).catch(err => {
+
+          })
+      },
     }
   }
 </script>

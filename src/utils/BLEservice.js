@@ -28,7 +28,7 @@ const connectDevice = function (device) {
         return getService(device.deviceId)
       }).then((res) => {
         return getCharacter(device.deviceId, res.services)
-      }).then((res) => {
+      }).then((res) => { 
         resolve(res)
       }).catch((err) => {
         reject({errMsg: '连接蓝牙设备发生错误:' + device.deviceId, errInfo: err})
@@ -36,11 +36,12 @@ const connectDevice = function (device) {
   })
 }
 // 断开蓝牙设备
-const disconDevice = function (device) {
+const disconDevice = function (deviceId) {
   return new Promise(function(resolve, reject) {
     wx.closeBLEConnection({
-      deviceId: device.deviceId,
+      deviceId: deviceId,
       success: function (res) {
+        store.dispatch('deleteSwitch')
         resolve(res)
       },
       fail: function (err) {
@@ -163,10 +164,10 @@ const getService = function (deviceId) {
 // 需要获取所有服务后才可单独使用对应服务的特征值
 // 双平台统一在建立链接后先执行 getBLEDeviceServices 与 getBLEDeviceCharacteristics 后再进行与蓝牙设备的数据交互
 const getCharacter = function (deviceId, services) {
-  return new Promise(function (resolve, reject) {
-    var servicePromisArr = []
-    services.forEach(function (item, index, array) {
-      servicePromisArr.push(
+  var servicePromisArr = []
+  services.forEach(function (item, index, array) {
+    servicePromisArr.push(
+      new Promise(function (resolve, reject) {
         wx.getBLEDeviceCharacteristics({
           deviceId: deviceId,
           serviceId: item.uuid,
@@ -189,22 +190,22 @@ const getCharacter = function (deviceId, services) {
             reject({errMsg: '获取蓝牙设备特征值错误', errInfo: err})
           }
         })
-      )
-    })
-    Promise.all(servicePromisArr)
-      .then(res => {
-        resolve(res)
-      }).catch(err => {
-        reject({errMsg: '获取蓝牙设备特征值错误', errInfo: err})
       })
+    )
   })
+  Promise.all(servicePromisArr)
+    .then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject({errMsg: '获取蓝牙设备特征值错误', errInfo: err})
+    })
 }
 
 // 读取特征值
-const readBLECharacteristicValue = function (device, sId, cId) {
+const readBLECharacteristicValue = function (dId, sId, cId) {
   return new Promise(function (resolve, reject) {
     wx.readBLECharacteristicValue({
-      deviceId: device.deviceId,
+      deviceId: dId,
       // 这里的 serviceId 需要在上面的 getBLEDeviceServices 接口中获取
       serviceId: sId,
       characteristicId: cId,
@@ -248,7 +249,8 @@ const addCharacteristicValueChangeListener = function() {
     // 灯状态
     else if(res.characteristicId == Comm.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC) {
       console.log("当前为读取状态",res)
-      store.dispatch('changeLightState', res,deviceId, res.value)
+      // store.dispatch()
+      store.dispatch('changeLightState', { deviceId: res.deviceId, value: res.value })
     }
     // OAD服务
     else if(res.characteristicId == Comm.SampleGattAttributes.OAD_IMAGE_NOTIFY_CHAR) {
@@ -261,9 +263,10 @@ const addCharacteristicValueChangeListener = function() {
 const foundDevice = function () {
   wx.onBluetoothDeviceFound(res => {
     var dev = res.devices[0]
-    console.log('发现设备', dev)
     if (dev.name === 'LOLAR_SWITCH') {
-      store.dispatch('addSwitch', res.devices[0])
+      dev = Comm.createSwitch(dev)
+      console.log('发现设备', dev)
+      store.dispatch('addSwitch', dev)
     }
   })
 }
