@@ -15,7 +15,7 @@
   import Comm from '@/utils/common' 
   import BLE from '@/utils/BLEservice'
   import store from '@/store'
-
+  import BLEpub from '@/mixin/BLEpub.js'
   export default {
     props:{
       // 灯对象
@@ -34,6 +34,7 @@
 
       }
     },
+    mixins:[BLEpub],
     computed:{
       switchColor: function () {
         return  'background-color:' + Comm.statusColor[this.switchItem.status] + ';'
@@ -107,19 +108,7 @@
             showCancel:false
           })
         }
-      },
-      // 更新
-      updatSwitchState() {
-        let dId = this.switchItem.deviceId
-        let sId = Comm.SampleGattAttributes.SIMPLEIO_SERVICE
-        let cId = Comm.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
-        BLE.readBLECharacteristicValue(dId,sId,cId)
-          .then(res => {
-
-          }).catch(err => {
-
-          })
-      },
+      }
     }
   }
 </script>

@@ -9,7 +9,7 @@
           <block v-if="switchList.length > 0" v-for="(lamp, index) in switchList" :key="index">
             <swiper-item class="switch-block">
                   <div class="screen-shot-wrapper">
-                    <lamp :lamp="lamp"></lamp>
+                    <lamp :lamp="lamp" @tapOption="goOption"></lamp>
                   </div>
             </swiper-item>
           </block>
@@ -62,7 +62,13 @@ export default {
   },
   mixins:[BLEpub],
   methods: {
-
+    // 跳转设置
+    goOption (deviceId){
+      console.log('跳转设置',deviceId)
+      wx.navigateTo({
+        url: '/pages/switchoption/main?deviceId=' + encodeURIComponent(deviceId)
+      })
+    },
     // 去控制页
     goBack (){
 

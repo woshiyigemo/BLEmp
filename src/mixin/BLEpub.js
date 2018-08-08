@@ -1,5 +1,6 @@
 import BLE from '@/utils/BLEservice'
 import store from '@/store'
+import Comm from '@/utils/common.js'
 export default {
   data () {
     return {
@@ -37,7 +38,7 @@ export default {
     },
     // 扫描设备
     scanDeviceManual () {
-      return new Promise(function (resolve, reject) {
+      return new Promise(function (resolve, reject) { 
         setTimeout(() => {
           BLE.stopScan()
             // .then(res => {
@@ -50,7 +51,7 @@ export default {
               console.log('停止扫描出错', err)
             })
         }, 6000)
-
+        
         BLE.openBluetoothAdapter()
           .then(res => {
             return BLE.getBluetoothAdapterState()
@@ -60,9 +61,19 @@ export default {
           }).then(function (res) {
             BLE.foundDevice()
           }).catch(function (err) {
+            wx.showToast({
+              title: err.errMsg
+            })
             reject(err)
           })
       })
+    },
+    // 更新
+    updatSwitchState () {
+      let dId = this.switchItem.deviceId
+      let sId = Comm.SampleGattAttributes.SIMPLEIO_SERVICE
+      let cId = Comm.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
+      BLE.readBLECharacteristicValue(dId, sId, cId)
     }
   }
 }

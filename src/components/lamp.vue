@@ -2,7 +2,7 @@
   <div>
     <div class="topline">
       <div class="lefticon">
-        <image style="width:24px;height:24px;" @tap="setOption" src="../images/@3x/option@3x.png"/>
+        <img style="width:24px;height:24px;" @tap="_tapOption" src="../images/@3x/option@3x.png"/>
       </div>
       <div class="title">
         {{lamp.localName}}
@@ -53,8 +53,9 @@
     },
     methods:{
       // 设置 
-      _setOption(){
+      _tapOption(){
         console.log('点击设置')
+        this.$emit('tapOption', this.lamp.deviceId)
       },
       _refresh(){
         console.log('点击刷新')

@@ -22,16 +22,16 @@ const mutations = {
     if (state.switchList[deviceId]) {
       state.switchList[deviceId].status = device.status
       state.switchList[deviceId].localName = device.localName
-      state.switchList[deviceId].name = device.name
     }
   },
-  // change light
+  // 二进制获取状态
   changeLightState (state, {deviceId, value}) {
-    console.log('获取灯状态1', deviceId, state.switchList[deviceId])
     if (!state.switchList[deviceId]) {
+      wx.showToast({
+        title: '不存在的开关'
+      })
       return
     }
-    
     var device = state.switchList[deviceId]
     var dataView = new DataView(value)
     var lightsArr = device.lightList
@@ -39,7 +39,6 @@ const mutations = {
     var optionState = dataView.getUint8(1)
     var hardwareVer = dataView.getUint8(2)
     var softwareVer = dataView.getUint8(3)
-    console.log('获取灯状态', device)
     var data = []
     data[0] = dataView.getUint8(1)
     // 获取灯数量
@@ -88,10 +87,7 @@ const mutations = {
     device.backlightWeak = backlightWeak
     // 版本号
     var version = hardwareVer.toString() + '.' + softwareVer.toString()
-    device.version  = version
-    console.log('查看device设备', device, device.lightList)
-
-    // 更新状态
+    device.version = version
   }
 }
 

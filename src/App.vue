@@ -1,4 +1,5 @@
 <script>
+import BLE from '@/utils/BLEservice.js'
 export default {
   created () {
     // 调用API从本地缓存中获取数据
@@ -7,6 +8,28 @@ export default {
     wx.setStorageSync('logs', logs)
 
     console.log('app created and cache logs by setStorageSync')
+  },
+  onShow(e){
+    console.log('APP SHOW ',e)
+    BLE.getBluetoothAdapterState()
+      .then(res => {
+
+      }).catch( err => {
+        if (!err.errInfo.available) {
+          wx.showToast({
+            title:'请确保手机开启了蓝牙'
+          })
+          return
+        }
+        BLE.openBluetoothAdapter()
+      })
+  },
+  onHide(){
+    console.log('APP HIDE ')
+    BLE.getBluetoothAdapterState()
+      .then(res => {
+        return BLE.closeBluetoothAdapter()
+      })
   }
 }
 </script>

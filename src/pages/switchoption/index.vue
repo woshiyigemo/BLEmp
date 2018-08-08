@@ -109,10 +109,6 @@ export default  {
   computed: {
     ...mapState({
       switchItem:state => {
-        if(!state.switchList[this.deviceId]){
-
-          return
-        }
         return state.switchList[this.deviceId]
       }
     })
@@ -235,54 +231,22 @@ export default  {
       return e.length > 0
     },
     // 初始化参数
-    initOption (options) {
-      var self = this
-      if(!options.dId){
-          wx.showModal({
-            content:'未获取到正确的设备',
-            mask:true,
-            showCancel:false,
-            success:function(res){
-              if(res.confirm){
-                wx.navigateBack({
-                    delta: 1
-                })
-              }
-            }
-          })         
-          return
-      }
-
-      this.deviceId = decodeURIComponent(options.dId)
-      for(var i = 0,arr = self.$parent.globalData.switchList;i < arr.length;i++){
-        if(arr[i].deviceId == self.deviceId){
-          self.pointer = arr[i]
-          self.device = JSON.parse(JSON.stringify(arr[i]))  
-          break
-        }
-      }
-
-      if(self.device){
-        self.getDeviceOption(self.device)
-      }else{
-        wx.showModal({
-          content:'未获取到正确的设备',
-          mask:true,
-          showCancel:false
-        })
-      }
+    getSwitchOption (options) {
+      wx.showLoading({
+        title:"正在连接",
+        mask:true
+      })
+      let dId = device.deviceId
+      let sId = this.$parent.globalData.UUID.SIMPLEIO_SERVICE
+      let cId = this.$parent.globalData.UUID.SIMPLEIO_CHAR2_CHARACTERISTIC
+      
     },
 
     // 读取设备设置项
     getDeviceOption (device) {
       var self = this
-      wx.showLoading({
-        title:"正在连接",
-        mask:true
-      })
-      var dId = device.deviceId,
-          sId = this.$parent.globalData.UUID.SIMPLEIO_SERVICE,
-          cId = this.$parent.globalData.UUID.SIMPLEIO_CHAR2_CHARACTERISTIC
+      
+    
       self.$parent.globalData.currentDevice = device    
       console.log("这是当前获取的设备",device)
       self.connectDevice(device)
@@ -475,6 +439,14 @@ export default  {
   },
   created(e){
     console.log('参数2', e)
+  },
+  onLoad(query){
+    console.log('查询 dev',query)
+    if (!query.deviceId){
+      return
+    }
+    this.deviceId = decodeURIComponent(query.deviceId)
+    this.getSwitchOption()
   }
 }
 </script>

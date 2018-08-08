@@ -41,10 +41,10 @@ const getRanColor = function () {
   num < len ? num++ : num = 0
   return color
 }
-const getColorByIndex = function (index) {
-  var cIndex = typeof index === 'number' ? index % colorList.length : 0
-  return colorList[cIndex]
-}
+// const getColorByIndex = function (index) {
+//   var cIndex = typeof index === 'number' ? index % colorList.length : 0
+//   return colorList[cIndex]
+// }
 // 根据装填获取颜色
 const getColorBySwitchStatus = function (status) {
   if(typeof status !== 'number') return swtichColorList[3]
@@ -73,7 +73,6 @@ const Switch = function (dev) {
 // 等类
 const Light = function (index) {
   this.id = Math.random(0,1).toString(36).slice(2)
-  // this.color = getColorByIndex(index)
   this.name = '灯' + (index + 1).toString()
 }
 
