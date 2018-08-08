@@ -69,8 +69,8 @@ export default {
       })
     },
     // 更新
-    updatSwitchState () {
-      let dId = this.switchItem.deviceId
+    updatSwitchState (deviceId) {
+      let dId = deviceId
       let sId = Comm.SampleGattAttributes.SIMPLEIO_SERVICE
       let cId = Comm.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
       BLE.readBLECharacteristicValue(dId, sId, cId)

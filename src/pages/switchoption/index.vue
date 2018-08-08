@@ -8,7 +8,7 @@
 	                    <div class="weui-label">模块名称</div>
 	                </div>
 	                <div class="weui-cell__bd">
-	                    <input class="weui-input" bindinput="changeSwitchName" v-model="device.localName"  />
+	                    <input class="weui-input" bindinput="changeSwitchName" v-model="switchCopy.localName"  />
 	                </div>
 	            </div>
 	            <div class="weui-cell weui-cell_input">
@@ -64,12 +64,12 @@
 
         	<div class="weui-cells__title">列表</div>
         	<div class="weui-cells weui-cells_after-title">    
-	            <div class="weui-cell weui-cell_input"  v-for="(item, index) in device.lightList" :key="item.deviceId">
+	            <div class="weui-cell weui-cell_input"  v-for="(light, index) in switchCopy.lightList" :key="light.deviceId">
 	                <div class="weui-cell__hd">
 	                    <div class="weui-label">灯{{index + 1}}</div>
 	                </div>
 	                <div class="weui-cell__bd">
-	                    <input class="weui-input" bindinput="changeLightName"  v-model="item.name"/>
+	                    <input class="weui-input" bindinput="changeLightName"  v-model="light.name"/>
 	                </div>
 	            </div>
 	        </div>
@@ -108,8 +108,9 @@ export default  {
   },
   computed: {
     ...mapState({
-      switchItem:state => {
-        return state.switchList[this.deviceId]
+      switchCopy:state => {
+        console.log(JSON.stringify(state.switchList[this.deviceId]))
+        return JSON.parse(JSON.stringify(state.switchList[this.deviceId]))
       }
     })
   },
@@ -236,18 +237,12 @@ export default  {
         title:"正在连接",
         mask:true
       })
-      let dId = device.deviceId
-      let sId = this.$parent.globalData.UUID.SIMPLEIO_SERVICE
-      let cId = this.$parent.globalData.UUID.SIMPLEIO_CHAR2_CHARACTERISTIC
-      
+      this.updatSwitchState(this.deviceId)
     },
 
     // 读取设备设置项
     getDeviceOption (device) {
       var self = this
-      
-    
-      self.$parent.globalData.currentDevice = device    
       console.log("这是当前获取的设备",device)
       self.connectDevice(device)
       .then(function(res){

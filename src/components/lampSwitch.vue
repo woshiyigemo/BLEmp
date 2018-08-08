@@ -94,7 +94,7 @@
           .then((res) => {
             self.switchItem.status = 0
             console.log('连接success',res, self.switchItem)
-            this.updatSwitchState()
+            this.updatSwitchState(this.switchItem.deviceId)
             this.$emit('afterConnectedSwitch',this.switchItem)
             wx.hideLoading()
           }).catch((err) => {
