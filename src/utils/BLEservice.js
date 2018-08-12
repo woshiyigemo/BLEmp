@@ -1,4 +1,5 @@
 import Comm from '@/utils/common.js'
+import Config from '@/utils/Config'
 import store from '@/store'
 // 微信蓝牙封装，依赖于wx对象
 
@@ -28,7 +29,8 @@ const connectDevice = function (device) {
         return getService(device.deviceId)
       }).then((res) => {
         return getCharacter(device.deviceId, res.services)
-      }).then((res) => { 
+      }).then((res) => {
+        console.log('连接success', device.deviceId, res)
         resolve(res)
       }).catch((err) => {
         reject({errMsg: '连接蓝牙设备发生错误:' + device.deviceId, errInfo: err})
@@ -241,19 +243,20 @@ const writeBLECharacteristicValue = function (dId, sId, cId, val) {
 const addCharacteristicValueChangeListener = function() {
   wx.onBLECharacteristicValueChange(res => {
     // 灯设置
-    if (res.characteristicId == Comm.SampleGattAttributes.SIMPLEIO_CHAR1_CHARACTERISTIC) {
+    if (res.characteristicId == Config.SampleGattAttributes.SIMPLEIO_CHAR1_CHARACTERISTIC) {
       console.log("当前设置状态")
       console.log(res.value)
       // self.updateSwitchOption(res.value)
+      store.dispatch('changeStatePwd',{ deviceId: res.deviceId, value: res.value})
     }
     // 灯状态
-    else if(res.characteristicId == Comm.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC) {
+    else if(res.characteristicId == Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC) {
       console.log("当前为读取状态",res)
       // store.dispatch()
       store.dispatch('changeLightState', { deviceId: res.deviceId, value: res.value })
     }
     // OAD服务
-    else if(res.characteristicId == Comm.SampleGattAttributes.OAD_IMAGE_NOTIFY_CHAR) {
+    else if(res.characteristicId == Config.SampleGattAttributes.OAD_IMAGE_NOTIFY_CHAR) {
       console.log("当前为OAD服务",res)
       // self.updateFrameWare(res.value)
     }

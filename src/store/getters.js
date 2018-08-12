@@ -9,4 +9,14 @@ export const switchArr = (state) => {
     }
   }
   return arr
-} 
+}
+export const getSwitchById = (state, getters) => {
+  // console.log(78789,, state.switchList[deviceId], state.switchList)
+  // if (!deviceId || !state.switchList[deviceId]) return null
+  // return state.switchList[deviceId]
+
+  return (deviceId) => {
+    if (!deviceId || !state.switchList[deviceId]) return null
+    return state.switchList[deviceId]
+  }
+}

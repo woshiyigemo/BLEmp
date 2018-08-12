@@ -10,7 +10,8 @@
   </div>
 </template>
 <script>
-import Comm from '@/utils/common' 
+import Comm from '@/utils/common'
+import Config from '@/utils/Config.js'
 import BLE from '@/utils/BLEservice'
 
   export default {
@@ -48,8 +49,8 @@ import BLE from '@/utils/BLEservice'
         var val = new ArrayBuffer(1)
         var dataView = new DataView(val)
         var dId = this.deviceId
-        var sId = Comm.SampleGattAttributes.SIMPLEIO_SERVICE
-        var cId = Comm.SampleGattAttributes.SIMPLEIO_CHAR1_CHARACTERISTIC
+        var sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE
+        var cId = Config.SampleGattAttributes.SIMPLEIO_CHAR1_CHARACTERISTIC
         dataView.setUint8(0,1)
         BLE.writeBLECharacteristicValue(dId,sId,cId,val)
           .then(res =>{

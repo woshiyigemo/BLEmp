@@ -13,6 +13,7 @@
 </template>
 <script>
   import Comm from '@/utils/common' 
+  import Config from '@/utils/Config.js' 
   import BLE from '@/utils/BLEservice'
   import store from '@/store'
   import BLEpub from '@/mixin/BLEpub.js'
@@ -37,10 +38,10 @@
     mixins:[BLEpub],
     computed:{
       switchColor: function () {
-        return  'background-color:' + Comm.statusColor[this.switchItem.status] + ';'
+        return  'background-color:' + Config.statusColor[this.switchItem.status] + ';'
       },
       switchStatus: function () {
-        return  Comm.statusText[this.switchItem.status]
+        return  Config.statusText[this.switchItem.status]
       }
     },
     methods:{
@@ -81,6 +82,7 @@
         var self = this
         // 连接状态直接跳转 
         if(this.switchItem.status == 0){
+          this.updatSwitchState(this.switchItem.deviceId)
           this.$emit('afterConnectedSwitch',this.switchItem)
         }
         // 未连接或新设备进行连接
@@ -93,11 +95,12 @@
           BLE.connectDevice(self.switchItem)
           .then((res) => {
             self.switchItem.status = 0
-            console.log('连接success',res, self.switchItem)
             this.updatSwitchState(this.switchItem.deviceId)
             this.$emit('afterConnectedSwitch',this.switchItem)
+            console.log(8989)
             wx.hideLoading()
           }).catch((err) => {
+            console.log(9090)
             wx.hideLoading()
           })
         }

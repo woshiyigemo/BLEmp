@@ -20,8 +20,6 @@
   </div>
  </template>
  <script>
-  import Comm from '@/utils/common' 
-  import BLE from '@/utils/BLEservice'
   import lightItem from '@/components/light'
 
   export default {

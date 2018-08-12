@@ -1,6 +1,7 @@
 import BLE from '@/utils/BLEservice'
 import store from '@/store'
 import Comm from '@/utils/common.js'
+import Config from '@/utils/Config.js'
 export default {
   data () {
     return {
@@ -13,7 +14,7 @@ export default {
   mounted () {},
   methods: {
     // 断开所有
-    disConnAll (switchList) {
+    disConnAll () {
       var sList = store.getters.switchArr
       var promiseArr = []
       sList.forEach(function (o, i) {
@@ -70,10 +71,32 @@ export default {
     },
     // 更新
     updatSwitchState (deviceId) {
+      if (!deviceId || !store.getters.getSwitchById(deviceId)) return
+      console.log(1212, store.getters.getSwitchById(deviceId))
       let dId = deviceId
-      let sId = Comm.SampleGattAttributes.SIMPLEIO_SERVICE
-      let cId = Comm.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
+      let sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE
+      let cId = Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
       BLE.readBLECharacteristicValue(dId, sId, cId)
+    },
+    // 密码更新
+    updatSwitchPwd (deviceId, pwd) {
+      if (!deviceId || !this.store.getters.getSwitchById(deviceId)) return
+      let abPwd = new ArrayBuffer(4)
+      let dataView = new DataView(abPwd)
+      dataView.setUint32(0, parseInt(pwd))
+      let dId = deviceId
+      let sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE
+      let cId = Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
+      return new Promise((resolve, reject) => {
+        BLE.writeBLECharacteristicValue(dId, sId, cId, abPwd)
+          .then(res => {
+            console.log('修改密码成功')
+            resolve(res)
+          }).catch(err => {
+            console.log('修改密码失败')
+            reject(err)
+          })
+      })
     }
   }
 }

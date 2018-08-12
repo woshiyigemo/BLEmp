@@ -83,7 +83,7 @@
       // 跳转设置页面
       goAbout () {
         wx.navigateTo({
-          url: '/pages/logs/main'
+          url: '/pages/about/main'
         })
         this.$emit('goAbout')
       },
