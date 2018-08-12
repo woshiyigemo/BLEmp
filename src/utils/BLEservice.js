@@ -1,5 +1,5 @@
 import Comm from '@/utils/common.js'
-import Config from '@/utils/Config'
+import Config from '@/utils/Config.js'
 import store from '@/store'
 // 微信蓝牙封装，依赖于wx对象
 
@@ -242,21 +242,22 @@ const writeBLECharacteristicValue = function (dId, sId, cId, val) {
 // 添加特征值变化监听
 const addCharacteristicValueChangeListener = function() {
   wx.onBLECharacteristicValueChange(res => {
+    console.log(111111111, res)
     // 灯设置
-    if (res.characteristicId == Config.SampleGattAttributes.SIMPLEIO_CHAR1_CHARACTERISTIC) {
+    if (res.characteristicId === Config.SampleGattAttributes.SIMPLEIO_CHAR1_CHARACTERISTIC) {
       console.log("当前设置状态")
       console.log(res.value)
       // self.updateSwitchOption(res.value)
       store.dispatch('changeStatePwd',{ deviceId: res.deviceId, value: res.value})
     }
     // 灯状态
-    else if(res.characteristicId == Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC) {
+    else if(res.characteristicId === Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC) {
       console.log("当前为读取状态",res)
       // store.dispatch()
       store.dispatch('changeLightState', { deviceId: res.deviceId, value: res.value })
     }
     // OAD服务
-    else if(res.characteristicId == Config.SampleGattAttributes.OAD_IMAGE_NOTIFY_CHAR) {
+    else if(res.characteristicId === Config.SampleGattAttributes.OAD_IMAGE_NOTIFY_CHAR) {
       console.log("当前为OAD服务",res)
       // self.updateFrameWare(res.value)
     }

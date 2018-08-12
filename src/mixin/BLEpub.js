@@ -77,6 +77,11 @@ export default {
       let sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE
       let cId = Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
       BLE.readBLECharacteristicValue(dId, sId, cId)
+        .then(res => {
+          console.log('22222', res)
+        }).catch(err => {
+          console.log('333333', err)
+        })
     },
     // 密码更新
     updatSwitchPwd (deviceId, pwd) {

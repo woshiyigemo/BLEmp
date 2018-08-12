@@ -28,6 +28,10 @@ import BLE from '@/utils/BLEservice'
       deviceId:{
         type:String,
         default:null
+      },
+      lightIndex :{
+        type:Number,
+        default:1
       }
     },
     data(){
@@ -36,22 +40,22 @@ import BLE from '@/utils/BLEservice'
     },
     computed:{
       lightColor:function() {
-        console.log('获取灯颜色:',this.light.status, Comm.lightColor[this.light.status])
-        return  'background-color:' + Comm.lightColor[this.light.status] + ';'
+        console.log('获取灯颜色:',this.light.status, this.lightIndex,Comm.getColorByIndex(this.lightIndex))
+        return  'background-color:' + Comm.getColorByIndex(this.lightIndex) + ';'
       }
     },
     methods:{
       // 开关灯
       _toggleLight(e){
         console.log('点击开关',e)
-        console.log(this.deviceId)
+        console.log(this.deviceId,this.lightIndex)
         if(!this.deviceId) return
         var val = new ArrayBuffer(1)
         var dataView = new DataView(val)
         var dId = this.deviceId
         var sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE
         var cId = Config.SampleGattAttributes.SIMPLEIO_CHAR1_CHARACTERISTIC
-        dataView.setUint8(0,1)
+        dataView.setUint8(0,this.lightIndex + 1)
         BLE.writeBLECharacteristicValue(dId,sId,cId,val)
           .then(res =>{
             this._updateLightState()
@@ -61,8 +65,8 @@ import BLE from '@/utils/BLEservice'
       _updateLightState(){
         if(!this.deviceId) return 
         let dId = this.deviceId
-        let sId = Comm.SampleGattAttributes.SIMPLEIO_SERVICE
-        let cId = Comm.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
+        let sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE
+        let cId = Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
         console.log('sid', sId,'cid', cId)
         BLE.readBLECharacteristicValue(dId,sId,cId)
           .then(res => {

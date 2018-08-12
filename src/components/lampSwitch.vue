@@ -97,7 +97,7 @@
             self.switchItem.status = 0
             this.updatSwitchState(this.switchItem.deviceId)
             this.$emit('afterConnectedSwitch',this.switchItem)
-            console.log(8989)
+            console.log(8989,this.switchItem)
             wx.hideLoading()
           }).catch((err) => {
             console.log(9090)

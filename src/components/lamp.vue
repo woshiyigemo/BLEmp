@@ -15,7 +15,7 @@
     <div 
       v-for="(light, index) in lamp.lightList" 
        :key="index">
-      <lightItem :deviceId="lamp.deviceId" :light="light"></lightItem>
+      <lightItem :deviceId="lamp.deviceId" :light="light" :lightIndex="index"></lightItem>
     </div>
   </div>
  </template>
