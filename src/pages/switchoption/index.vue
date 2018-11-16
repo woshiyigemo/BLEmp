@@ -45,20 +45,20 @@
                     <div class="weui-cell__bd" >
                         <p>设备名称</p>
                     </div>
-                    <div class="weui-cell__ft" v-html="switchCopy.localName"></div>
+                    <div class="weui-cell__ft" v-html="switchCopy.localName||''"></div>
                 <!-- </navigator> -->
                 <!-- </a> -->
                 <a class="weui-cell weui-cell_access" bindtap="toPwd" >
                     <div class="weui-cell__bd">
                         <p>连接密码</p>
                     </div>
-                    <div class="weui-cell__ft" v-html="switchCopy.pwd"></div>
+                    <div class="weui-cell__ft" v-html="switchCopy.pwd||''"></div>
                 </a>
                 <a class="weui-cell weui-cell_access" bindtap="toVersion" >
                     <div class="weui-cell__bd">
                         <p>固件版本</p>
                     </div>
-                    <div class="weui-cell__ft" v-html="switchCopy.version"></div>
+                    <div class="weui-cell__ft" v-html="switchCopy.version||''"></div>
                 </a>
               </div>
 	        <!-- </div> -->
@@ -165,21 +165,24 @@ export default  {
   mixins: [BLEpub],
   methods: {
     // 初始化参数
-    getSwitchOption (options) {
-      wx.showLoading({
-        title:"正在连接",
-        mask:true
-      })
-      this.updatSwitchState(this.deviceId)
-        .then(res => {
-           wx.hideLoading()
-        }).catch(err => {
+    // getSwitchOption (options) {
+    //   wx.showLoading({
+    //     title:"正在连接",
+    //     mask:true
+    //   })
+    //   this.updatSwitchState(this.deviceId)
+    //     .then(res => {
+    //        wx.hideLoading()
+    //     }).catch(err => {
           
-        })
-    },
+    //     })
+    // },
     taptest: function(e) {
       console.log(9999999)
     },
+    toVersion: () => {
+      console.log(8888)
+    }
     // // 设置参数
     // setDeviceOption (value) {
     //   var self = this,
@@ -264,7 +267,7 @@ export default  {
       return
     }
     this.deviceId = decodeURIComponent(query.deviceId)
-    this.getSwitchOption()
+    // this.getSwitchOption()
   }
 }
 </script>

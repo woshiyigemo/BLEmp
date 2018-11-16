@@ -135,7 +135,11 @@ export default  {
 
     // 保存字符校验
     isStringValidate () {
-      let res
+      let res = {
+        str:'没有找到对应的字段',
+        isValidate:false
+      } 
+      
       switch (this.options.key.toString())
       {
         case 'lightName':
