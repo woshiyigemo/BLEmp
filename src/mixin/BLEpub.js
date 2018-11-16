@@ -76,12 +76,16 @@ export default {
       let dId = deviceId
       let sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE
       let cId = Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
-      BLE.readBLECharacteristicValue(dId, sId, cId)
+      return new Promise((resolve, reject) => {
+        BLE.readBLECharacteristicValue(dId, sId, cId)
         .then(res => {
-          console.log('22222', res)
+          console.log('更新开关状态成功')
+          resolve(res)
         }).catch(err => {
-          console.log('333333', err)
+          console.log('更新开关状态失败')
+          reject(err)
         })
+      })
     },
     // 密码更新
     updatSwitchPwd (deviceId, pwd) {

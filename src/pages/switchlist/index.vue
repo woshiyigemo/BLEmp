@@ -45,6 +45,7 @@ import { mapState, mapGetters} from 'vuex'
 export default {
   data () {
     return {
+      isNavigating: false,  // 正在跳转
       isRefreshing: false // 自动刷新
     }
   },
@@ -108,14 +109,24 @@ export default {
     },
     // 连接开关完毕 
     connectedSwitch (e) {
+      if(this.isNavigating) return
+      this.isNavigating = true
       wx.navigateTo({
-        url: '/pages/operator/main'
+        url: '/pages/operator/main',
+        complete:() => {
+          this.isNavigating = false
+        },
       })
     },
     // 去控制页
     goBack (){
+      if(this.isNavigating) return
+      this.isNavigating = true
       wx.navigateTo({
-        url: '/pages/operator/main'
+        url: '/pages/operator/main',
+        complete:() => {
+          this.isNavigating = false
+        },
       })
     },
     // 退出小程序回调 

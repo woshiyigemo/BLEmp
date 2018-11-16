@@ -7,7 +7,6 @@ import {
   shareInfo
 } from './Config.js'
 import Config  from './Config.js'
-console.log(Config)
 var num = 0
 const getRanColor = function () {
   var len = colorList.length - 1
@@ -32,6 +31,7 @@ const getColorByLightStatus = function (status) {
   var index = status % lightColorList.length
   return lightColorList[index]
 }
+
 // 开关类
 const Switch = function (dev) {
   this.localName = dev.localName || dev.name || Math.random().toString()

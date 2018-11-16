@@ -24,6 +24,16 @@ const mutations = {
       state.switchList[deviceId].localName = device.localName
     }
   },
+  changeLightName (state, {deviceId, lightIndex, value }) {
+    if (!state.switchList[deviceId]) {
+      wx.showToast({
+        title: '不存在的开关'
+      })
+      return
+    }
+    let device = state.switchList[deviceId]
+    device.lightList[lightIndex].name = value
+  },
   // 二进制获取状态
   changeLightState (state, {deviceId, value}) {
     if (!state.switchList[deviceId]) {

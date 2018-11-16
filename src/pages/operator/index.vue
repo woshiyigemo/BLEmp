@@ -40,12 +40,13 @@ export default {
         noswitch3x: noswitch3x
       },
       // switchList: [],
-      isRefreshing: false // 自动刷新
+      isRefreshing: false, // 自动刷新
+      isNavigating: false
     }
   },
   computed:{
     ...mapState({
-      switchList: state => {
+      switchList(state) {
         var slist = []
         for(var i in state.switchList){
           if(state.switchList[i].status === 0){
@@ -64,9 +65,14 @@ export default {
   methods: {
     // 跳转设置
     goOption (deviceId){
+      if(this.isNavigating) return
+      this.isNavigating = true
       console.log('跳转设置',deviceId)
       wx.navigateTo({
-        url: '/pages/switchoption/main?deviceId=' + encodeURIComponent(deviceId)
+        url: '/pages/switchoption/main?deviceId=' + encodeURIComponent(deviceId),
+        complete:() => {
+          this.isNavigating = false
+        },
       })
     },
     // 去控制页
