@@ -2,66 +2,32 @@
 	<div class="page">
     <!-- <input type="file" class="upload-input" accept="image/*"> -->
 		<div class="page__bd">
-			  <!-- <div class="weui-cells weui-cells_after-title"> -->
-	            <!-- <div class="weui-cell weui-cell_input">
-	                <div class="weui-cell__hd">
-	                    <div class="weui-label">模块名称</div>
-	                </div>
-	                <div class="weui-cell__bd">
-	                    <input class="weui-input" bindinput="changeSwitchName" v-model="switchCopy.localName"  />
-	                </div>
-	            </div>
-	            <div class="weui-cell weui-cell_input">
-	                <div class="weui-cell__hd">
-	                    <div class="weui-label">连接密码</div>
-	                </div>
-	                <div class="weui-cell__bd">
-	                    <input class="weui-input" bindinput="changePwd"  v-model="switchCopy.pwd"/>
-	                </div>
-	            </div>
-	            <div class="weui-cell weui-cell_input weui-cell_vcode">
-	                <div class="weui-cell__hd">
-	                    <div class="weui-label">固件版本</div>
-	                </div>
-	                <div class="weui-cell__bd">
-	                    {{switchCopy.version}}
-	                </div>
-	                <div class="weui-cell__ft">
-	                    <div class="weui-vcode-btn noborder" @tap="updateFirmware">
-	                    	<button class="weui-btn" type="default" plain="true">按钮</button>
-	                    	更新固件
-	                    </div>
-	                </div>
-	            </div> -->
-              <div class="weui-cells" bindtap="taptest">
-                <!-- <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <p>标题文字</p>
-                    </div>
-                    <div class="weui-cell__ft">说明文字</div>
-                </div> -->
-                <!-- <a class="weui-cell weui-cell_access"  > -->
-                <!-- <navigator class="weui-cell weui-cell_access" hover-class="weui-cell_active" url=""> -->
-                    <div class="weui-cell__bd" >
-                        <p>设备名称</p>
-                    </div>
-                    <div class="weui-cell__ft" v-html="switchCopy.localName||''"></div>
-                <!-- </navigator> -->
-                <!-- </a> -->
-                <a class="weui-cell weui-cell_access" bindtap="toPwd" >
-                    <div class="weui-cell__bd">
-                        <p>连接密码</p>
-                    </div>
-                    <div class="weui-cell__ft" v-html="switchCopy.pwd||''"></div>
-                </a>
-                <a class="weui-cell weui-cell_access" bindtap="toVersion" >
-                    <div class="weui-cell__bd">
-                        <p>固件版本</p>
-                    </div>
-                    <div class="weui-cell__ft" v-html="switchCopy.version||''"></div>
-                </a>
-              </div>
-	        <!-- </div> -->
+            <div class="weui-cells" >
+            <a class="weui-cell weui-cell_access"  >
+                <div class="weui-cell__bd" data-optionkey="localName" data-optionval="{{switchCopy.localName||''}}" @tap="navTo">
+                    <p>设备名称</p>
+                </div>
+                <div class="weui-cell__ft" v-html="switchCopy.localName||''"></div>
+            </a>
+            <a class="weui-cell weui-cell_access" data-optionkey="pwd" data-optionval="{{switchCopy.pwd||''}}" @tap="navTo" >
+                <div class="weui-cell__bd">
+                    <p>连接密码</p>
+                </div>
+                <div class="weui-cell__ft" v-html="switchCopy.pwd||''"></div>
+            </a>
+            <div class="weui-cell weui-cell_access" >
+                <div class="weui-cell__bd">
+                    <p>固件版本</p>
+                </div>
+                <div class="weui-cell__ft" v-html="switchCopy.version||''"></div>
+            </div>
+            <!-- <a class="weui-cell weui-cell_access" >
+                <div class="weui-cell__bd">
+                    <p>固件版本</p>
+                </div>
+                <div class="weui-cell__ft" v-html="switchCopy.version||''"></div>
+            </a> -->
+            </div>
 
 
 
@@ -72,32 +38,32 @@
 	            <div class="weui-cell weui-cell_switch"  style="padding-right:5px;">
 	                <div class="weui-cell__bd">静音</div>
 	                <div class="weui-cell__ft">
-	                    <switch  :checked="!!switchCopy.mute"  bindchange="changeMuteState"/>
+	                    <switch  :checked="!!switchCopy.mute"  @change="changeMuteState"/>
 	                </div>
 	            </div>
               <div class="weui-cell weui-cell_switch"  style="padding-right:5px;">
                   <div class="weui-cell__bd">强背光</div>
                   <div class="weui-cell__ft">
-                      <switch  :checked="!switchCopy.backlightStrong"  bindchange="changeBacklightStrongState"/>
+                      <switch  :checked="!switchCopy.backlightStrong"  @change="changeBacklightStrongState"/>
                   </div>
               </div>
               <div class="weui-cell weui-cell_switch"  style="padding-right:5px;">
                   <div class="weui-cell__bd">弱背光</div>
                   <div class="weui-cell__ft">
-                      <switch  :checked="!switchCopy.backlightWeak"  bindchange="changeBacklightWeakState"/>
+                      <switch  :checked="!switchCopy.backlightWeak"  @change="changeBacklightWeakState"/>
                   </div>
               </div>
               <div class="weui-cell weui-cell_switch"  style="padding-right:5px;">
                   <div class="weui-cell__bd">信号增强</div>
                   <div class="weui-cell__ft">
-                      <switch  :checked="!!switchCopy.signalStrong"  bindchange="changeSignalState"/>
+                      <switch  :checked="!!switchCopy.signalStrong"  @change="changeSignalState"/>
                   </div>
               </div>
 	        </div>
 
         	<div class="weui-cells__title">列表</div>
           <div class="weui-cells">
-            <a class="weui-cell weui-cell_access" href="javascript:;" v-for="(light, index) in switchCopy.lightList" :key="light.deviceId">
+            <a class="weui-cell weui-cell_access" data-optionkey="lightName" data-optionval="{{index}}" @tap="navTo" v-for="(light, index) in switchCopy.lightList" :key="light.deviceId">
                 <div class="weui-cell__bd">
                     <p>灯{{index + 1}}</p>
                 </div>
@@ -109,9 +75,9 @@
     <br>
     <br>
     
-    <!-- <div class="weui-btn-area">
-        <button class="weui-btn mbottom50" type="default" @tap="saveChange">保存</button>
-    </div> -->
+    <div class="weui-btn-area">
+        <button class="weui-btn mbottom50" type="default" @tap="taptest">保存</button>
+    </div>
 	</div> 
 </template>
 
@@ -177,12 +143,25 @@ export default  {
           
     //     })
     // },
+    navTo: (e) => {
+        // this.deviceId = decodeURIComponent(query.deviceId)
+        // query.lightIndex ? this.options.lightIndex = decodeURIComponent(query.lightIndex) : null
+        // this.options.key = decodeURIComponent(query.key)
+        // this.options.name = query.lightIndex ? mapInfo[this.options.key](query.lightIndex) : mapInfo[this.options.key]
+        // this.options.value = decodeURIComponent(query.val)
+        console.log(e)
+        var params = {
+            deviceId: encodeURIComponent(this.deviceId),
+            key: encodeURIComponent(e.target.dataset.optionkey),
+            value: encodeURIComponent(e.target.dataset.optionval)
+        }
+    },
     taptest: function(e) {
-      console.log(9999999)
+      console.log(9999999,e)
     },
     toVersion: () => {
       console.log(8888)
-    }
+    },
     // // 设置参数
     // setDeviceOption (value) {
     //   var self = this,

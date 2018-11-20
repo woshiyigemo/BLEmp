@@ -6,10 +6,10 @@
     </div>
     <div class="media-wrapper">
         <swiper class="swiper-wrapper" :duration="duration" :circular="false" @change="sliderSwitch">
-          <block v-if="switchList.length > 0" v-for="(lamp, index) in switchList" :key="index">
+          <block v-if="switchList.length > 0" v-for="(lampInstance, index) in switchList" :key="index">
             <swiper-item class="switch-block">
                   <div class="screen-shot-wrapper">
-                    <lamp :lamp="lamp" @tapOption="goOption"></lamp>
+                    <lamp :lamp="lampInstance" @tapOption="goOption"></lamp>
                   </div>
             </swiper-item>
           </block>

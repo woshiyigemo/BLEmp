@@ -110,8 +110,9 @@ export default  {
     },
 
     // 保存\设置非记录在设备的参数
-    saveChange () {
-      if(!this.isStringValidate()) return
+    saveChange (e) {
+      // if(!this.isStringValidate()) return
+      console.log(7777)
       wx.showLoading({
         title:'正在保存',
         mask:true
