@@ -4,12 +4,12 @@
 		<div class="page__bd">
             <div class="weui-cells" >
             <a class="weui-cell weui-cell_access"  >
-                <div class="weui-cell__bd" data-optionkey="localName" data-optionval="{{switchCopy.localName||''}}" @tap="navTo">
+                <div class="weui-cell__bd" data-optionkey="localName" :data-optionVal="switchCopy.localName" @tap="navTo">
                     <p>设备名称</p>
                 </div>
                 <div class="weui-cell__ft" v-html="switchCopy.localName||''"></div>
             </a>
-            <a class="weui-cell weui-cell_access" data-optionkey="pwd" data-optionval="{{switchCopy.pwd||''}}" @tap="navTo" >
+            <a class="weui-cell weui-cell_access" data-optionkey="pwd" :data-optionVal="switchCopy.pwd" @tap="navTo" >
                 <div class="weui-cell__bd">
                     <p>连接密码</p>
                 </div>
@@ -28,10 +28,6 @@
                 <div class="weui-cell__ft" v-html="switchCopy.version||''"></div>
             </a> -->
             </div>
-
-
-
-
 
 	        <div class="weui-cells__title">选项</div>
         	<div class="weui-cells weui-cells_after-title"> 
@@ -63,7 +59,7 @@
 
         	<div class="weui-cells__title">列表</div>
           <div class="weui-cells">
-            <a class="weui-cell weui-cell_access" data-optionkey="lightName" data-optionval="{{index}}" @tap="navTo" v-for="(light, index) in switchCopy.lightList" :key="light.deviceId">
+            <a class="weui-cell weui-cell_access" data-optionkey="lightName" :data-optionLightIndex="index" :data-optionVal="light.name" @tap="navTo" v-for="(light, index) in switchCopy.lightList" :key="light.deviceId">
                 <div class="weui-cell__bd">
                     <p>灯{{index + 1}}</p>
                 </div>
@@ -75,9 +71,9 @@
     <br>
     <br>
     
-    <div class="weui-btn-area">
+    <!-- <div class="weui-btn-area">
         <button class="weui-btn mbottom50" type="default" @tap="taptest">保存</button>
-    </div>
+    </div> -->
 	</div> 
 </template>
 
@@ -88,22 +84,13 @@ import Comm from '@/utils/common.js'
 import Config from '@/utils/Config.js'
 import qs from 'qs'
 import { mapState, mapGetters} from 'vuex'
+import { error } from 'util';
 export default  {
 
   data: function(){
     return {
-      framewareUrl:'http://x.hao61.net/bluetemp/LOLAR-SW-180317.bin',
-      frameTempUrl:'',
-      optionsReady:false,
-      pointer:null, // 开关指针
-      device:null,
-      deviceOption: {
-        version: '0.0.0', // 版本
-        mute: 0,          // 静音
-        backlightStrong: false, // 强背光
-        backlightWeak: true,    // 弱背光
-        signalStrong: false     // 信号增强
-      }
+        isNavigating:false,
+        framewareUrl:'http://x.hao61.net/bluetemp/LOLAR-SW-180317.bin'
     }
   },
   computed: {
@@ -131,37 +118,26 @@ export default  {
   mixins: [BLEpub],
   methods: {
     // 初始化参数
-    // getSwitchOption (options) {
-    //   wx.showLoading({
-    //     title:"正在连接",
-    //     mask:true
-    //   })
-    //   this.updatSwitchState(this.deviceId)
-    //     .then(res => {
-    //        wx.hideLoading()
-    //     }).catch(err => {
-          
-    //     })
-    // },
-    navTo: (e) => {
-        // this.deviceId = decodeURIComponent(query.deviceId)
-        // query.lightIndex ? this.options.lightIndex = decodeURIComponent(query.lightIndex) : null
-        // this.options.key = decodeURIComponent(query.key)
-        // this.options.name = query.lightIndex ? mapInfo[this.options.key](query.lightIndex) : mapInfo[this.options.key]
-        // this.options.value = decodeURIComponent(query.val)
-        console.log(e)
+    navTo (e) {
+        if(this.isNavigating) return
+        
         var params = {
-            deviceId: encodeURIComponent(this.deviceId),
-            key: encodeURIComponent(e.target.dataset.optionkey),
-            value: encodeURIComponent(e.target.dataset.optionval)
+            deviceId: this.deviceId,
+            key: e.currentTarget.dataset.optionkey,
+            val: e.currentTarget.dataset.optionval
         }
+        if(typeof e.currentTarget.dataset.optionlightindex !== 'undefined') params.lightIndex = e.currentTarget.dataset.optionlightindex
+        let p = qs.stringify(params)
+        // console.log(p, this.deviceId, e.currentTarget.dataset.optionval, encodeURIComponent(e.currentTarget.dataset.optionval))
+        this.isNavigating = true
+        wx.navigateTo({
+            url: '/pages/optionchange/main?' + p,
+            complete:() => {
+                this.isNavigating = false
+            },
+        })
     },
-    taptest: function(e) {
-      console.log(9999999,e)
-    },
-    toVersion: () => {
-      console.log(8888)
-    },
+
     // // 设置参数
     // setDeviceOption (value) {
     //   var self = this,
@@ -246,7 +222,7 @@ export default  {
       return
     }
     this.deviceId = decodeURIComponent(query.deviceId)
-    // this.getSwitchOption()
+    console.log('this.deviceId',this.deviceId)
   }
 }
 </script>

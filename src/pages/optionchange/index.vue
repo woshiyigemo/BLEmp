@@ -30,7 +30,7 @@ const mapInfo = {
   localName:'模块名称',
   pwd:'设备密码',
   lightName:(index) => {
-    return `灯${index + 1}`
+    return `灯${Number(index) + 1}`
   },
 }
 
@@ -112,16 +112,25 @@ export default  {
     // 保存\设置非记录在设备的参数
     saveChange (e) {
       // if(!this.isStringValidate()) return
-      console.log(7777)
       wx.showLoading({
         title:'正在保存',
         mask:true
       })
       this.saveOptions(this.options.value)
         .then(res => {
-          wx.hideLoading()
+          wx.showToast({
+            icon: 'none',
+            title:'保存成功',
+            duration:1000,
+            mask: true
+          })
         }).catch(err => {
-          wx.hideLoading()
+          wx.showToast({
+            icon: 'none',
+            title:'保存失败，请尝试重新保存',
+            duration:1000,
+            mask: true
+          })
         })
     },
 
@@ -165,14 +174,16 @@ export default  {
     // 保存
     saveOptions (val) {
       return new Promise((resolve, reject) => {
-        switch (this.options.key.toString())
-        {
+        console.log('test',this.options.key.toString())
+        switch (this.options.key.toString()){
           case 'lightName':
                 let light = {
                   value: val,
                   lightIndex: lightIndex
                 }
+                console.log('test1', this.options.ket.toString())
                 this.$store.dispatch('changeLightName', { deviceId: this.deviceId, lightIndex: light.lightIndex, value: light.value })
+                console.log('test',this.options.key.toString())
                 resolve()
                 break
           case 'localName':
@@ -187,13 +198,15 @@ export default  {
           case 'pwd':
                 this.updatSwitchPwd(this.switchCopy.deviceId, val)
                   .then(res => {
-                    resolve(res)
+                    resolve()
                   }).catch(err => {
-                    reject(err)
+                    reject()
                   })
                 break   
           default:
-            reject()    
+            console.log('保存失败，未对应到key')
+            reject()  
+            break  
         }
       })
     }
@@ -223,7 +236,8 @@ export default  {
     this.deviceId = decodeURIComponent(query.deviceId)
     query.lightIndex ? this.options.lightIndex = decodeURIComponent(query.lightIndex) : null
     this.options.key = decodeURIComponent(query.key)
-    this.options.name = query.lightIndex ? mapInfo[this.options.key](query.lightIndex) : mapInfo[this.options.key]
+    this.options.name = typeof query.lightIndex != 'undefined' ? (mapInfo[this.options.key])(query.lightIndex) : mapInfo[this.options.key]
+    console.log('this.options.name',query.lightIndex, this.options.name)
     this.options.value = decodeURIComponent(query.val)
   }
 }
