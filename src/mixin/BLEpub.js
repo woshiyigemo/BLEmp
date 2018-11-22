@@ -95,7 +95,7 @@ export default {
       dataView.setUint32(0, parseInt(pwd))
       let dId = deviceId
       let sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE
-      let cId = Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
+      let cId = Config.SampleGattAttributes.SIMPLEIO_CHAR5_CHARACTERISTIC
       return new Promise((resolve, reject) => {
         BLE.writeBLECharacteristicValue(dId, sId, cId, abPwd)
           .then(res => {
