@@ -39,8 +39,8 @@ export default  {
   data: function(){
     return {
         options: {
-            name: '测试',
-            key: 'test',
+            name: '',
+            key: '',
             value: '',
         },
         deviceId: null,
@@ -173,43 +173,50 @@ export default  {
     
     // 保存
     saveOptions (val) {
+
       return new Promise((resolve, reject) => {
-        console.log('test',this.options.key.toString())
-        switch (this.options.key.toString()){
-          case 'lightName':
+        let key = this.options.key.toString() 
+        console.log('保存前11125', key ,key == 'lightName')
+        switch(true)
+        {
+          case key == 'lightName':
                 let light = {
                   value: val,
-                  lightIndex: lightIndex
+                  lightIndex: this.options.lightIndex
                 }
-                console.log('test1', this.options.ket.toString())
+                console.log('test1',light, this.options.key.toString())
                 this.$store.dispatch('changeLightName', { deviceId: this.deviceId, lightIndex: light.lightIndex, value: light.value })
                 console.log('test',this.options.key.toString())
                 resolve()
                 break
-          case 'localName':
+          case key=='localName':
                 let device = {
                   deviceId: this.deviceId,
                   status: this.switchCopy.status,
                   localName: val
                 }
+                console.log('test2', this.options.key.toString())
                 this.$store.dispatch('changeSwitchState', { deviceId: device.deviceId, device: device })
                 resolve()
                 break
-          case 'pwd':
+          case key=='pwd':
+            console.log('test3', this.updatSwitchPwd, this.switchCopy, val)
                 this.updatSwitchPwd(this.switchCopy.deviceId, val)
                   .then(res => {
                     resolve()
                   }).catch(err => {
+                    
                     reject()
                   })
-                break   
+                break
           default:
-            console.log('保存失败，未对应到key')
-            reject()  
-            break  
+            console.log('没有对应的key')
+            reject()
+            break
         }
+        console.log('switch完毕')
       })
-    }
+    },
   },
   mounted(e){
       console.log('参数', e)
@@ -221,7 +228,7 @@ export default  {
 
   onLoad(query){
     console.log('查询 dev',query)
-    if (!query.deviceId || !query.key || typeof query.val === 'undefined'){
+    if (!query.deviceId || !query.key){
       wx.showModal({
         showCancel:false,
         content:"缺少参数，点击后返回",
@@ -238,7 +245,16 @@ export default  {
     this.options.key = decodeURIComponent(query.key)
     this.options.name = typeof query.lightIndex != 'undefined' ? (mapInfo[this.options.key])(query.lightIndex) : mapInfo[this.options.key]
     console.log('this.options.name',query.lightIndex, this.options.name)
-    this.options.value = decodeURIComponent(query.val)
+    this.options.value = this.options.key == 'pwd'? '':decodeURIComponent(query.val)
+  },
+  onUnload(){
+    this.options = {
+        name: '',
+        key: '',
+        value: '',
+    }
+    this.deviceId = null
+    this.isNavigating = false 
   }
 }
 </script>

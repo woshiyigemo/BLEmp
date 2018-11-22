@@ -89,7 +89,7 @@ export default {
     },
     // 密码更新
     updatSwitchPwd (deviceId, pwd) {
-      if (!deviceId || !this.store.getters.getSwitchById(deviceId)) return
+      if (!deviceId || !store.getters.getSwitchById(deviceId)) return
       let abPwd = new ArrayBuffer(4)
       let dataView = new DataView(abPwd)
       dataView.setUint32(0, parseInt(pwd))
@@ -102,7 +102,7 @@ export default {
             console.log('修改密码成功')
             resolve(res)
           }).catch(err => {
-            console.log('修改密码失败')
+            console.log('修改密码失败',err)
             reject(err)
           })
       })
