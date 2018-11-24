@@ -38,11 +38,6 @@ const Switch = function (dev) {
   this.name = dev.name
   this.deviceId = dev.deviceId
   this.status = 2 // 新设备状态
-  // this.mute = 1 // 静音
-  // this.backlightStrong = 1 // 强背光
-  // this.backlightWeek = 1 // 弱背光
-  // this.signalStrong = 0 // 增强信号
-  // this.version = '0.0' // 默认版本号
   this.lightList = [new Light(0), new Light(1), new Light(2), new Light(3)]
 }
 // 等类

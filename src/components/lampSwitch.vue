@@ -53,7 +53,7 @@
             // 删除对应的开关并重新读取
             if(res.confirm){
               wx.showLoading({
-                title:"正在删除设备" + this.switchItem.status,
+                title:"正在删除设备" + this.switchItem.localName,
                 mask:true
               })
               // 连接状态需要先断开连接
@@ -61,8 +61,9 @@
                 BLE.getBluetoothAdapterState()
                 // 若蓝牙可用则先删除
                 .then((res) => {
-                  return BLE.disconDevice(this.switchItem)
+                  return BLE.disconDevice(this.switchItem.deviceId)
                 }).then((res) => {
+                  console.log('删除设备成功0', res)
                   // 删除开关
                   this.$emit('deleteSwitch',this.switchItem)
                   wx.hideLoading()
@@ -70,8 +71,12 @@
                   wx.hideLoading()
                 })
               } else {
+
                 // 删除开关
+                this.$store.dispatch('deleteSwitch')
+                console.log('删除设备成功1')
                 this.$emit('deleteSwitch',this.switchItem)
+                wx.hideLoading()
               }
             }
           }
@@ -83,15 +88,21 @@
         // 连接状态直接跳转 
         if(this.switchItem.status == 0){
           this.updatSwitchState(this.switchItem.deviceId)
+          .then((res) => {
+            this.$emit('afterConnectedSwitch',this.switchItem)
+          }).catch((err) => {
+
+          })
           this.$emit('afterConnectedSwitch',this.switchItem)
         }
         // 未连接或新设备进行连接
-        else if(this.switchItem.status == 1 || this.switchItem.status == 2){
+        else if(this.switchItem.status == 1 || 
+                this.switchItem.status == 2 ||
+                this.switchItem.status == 3){
           wx.showLoading({
             title:"正在连接",
             mask:true
           })
-          
           BLE.connectDevice(self.switchItem)
           .then((res) => {
             self.switchItem.status = 0

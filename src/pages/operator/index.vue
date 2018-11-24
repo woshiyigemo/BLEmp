@@ -68,10 +68,12 @@ export default {
       if(this.isNavigating) return
       this.isNavigating = true
       console.log('跳转设置',deviceId)
+      wx.showLoading()
       wx.navigateTo({
         url: '/pages/switchoption/main?deviceId=' + encodeURIComponent(deviceId),
         complete:() => {
           this.isNavigating = false
+          wx.hideLoading()
         },
       })
     },

@@ -82,7 +82,7 @@ export default {
           console.log('更新开关状态成功')
           resolve(res)
         }).catch(err => {
-          console.log('更新开关状态失败')
+          console.log('更新开关状态失败', err)
           reject(err)
         })
       })

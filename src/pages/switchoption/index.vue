@@ -98,6 +98,7 @@ export default  {
       switchCopy(state) {
         // console.log(999999,this,this.deviceId,JSON.stringify(state.switchList[this.deviceId]))
         if(!state.switchList[this.deviceId]) {
+          wx.showLoading()
           wx.showToast({
             title:'未获取到正确的设备',
             icon:"none",
@@ -105,7 +106,10 @@ export default  {
             duration:800,
             complete:(rs) => {
               wx.navigateBack({
-                delta: 1
+                delta: 1,
+                complete:() => {
+                    wx.hideLoading()
+                }
               })
             },
           })
@@ -130,85 +134,15 @@ export default  {
         let p = qs.stringify(params)
         // console.log(p, this.deviceId, e.currentTarget.dataset.optionval, encodeURIComponent(e.currentTarget.dataset.optionval))
         this.isNavigating = true
+        wx.showLoading()
         wx.navigateTo({
             url: '/pages/optionchange/main?' + p,
             complete:() => {
                 this.isNavigating = false
+                wx.hideLoading()
             },
         })
-    },
-
-    // // 设置参数
-    // setDeviceOption (value) {
-    //   var self = this,
-    //       dId = self.device.deviceId,
-    //       sId = self.$parent.globalData.UUID.SIMPLEIO_SERVICE,
-    //       cId = self.$parent.globalData.UUID.SIMPLEIO_CHAR1_CHARACTERISTIC
-
-    //     var val = new ArrayBuffer(1),
-    //         dataView = new DataView(val)
-    //         dataView.setUint8(0,value)
-    //     self.$parent.globalData.currentDevice = self.device
-    //     return new Promise(function(resolve,reject){
-    //       self.writeBLECharacteristicValue(dId,sId,cId,val)
-    //       .then(function(res){
-    //         console.log("设置设置成功")
-    //         var readcId = self.$parent.globalData.UUID.SIMPLEIO_CHAR2_CHARACTERISTIC
-    //         return  self.readBLECharacteristicValue(self.device,sId,readcId)
-    //       }).then((res) => {
-    //         resolve(res)
-    //       }).catch(function(err){
-    //         reject(err)
-    //         dwx.hideLoading()
-    //       })
-    //     })    
-    // },
-
-    // 保存\设置非记录在设备的参数
-    // saveChange () {
-    //   var self = this
-    //   if(self.showEmptyWarnning()) return
-    //   if(!self.isStringValidate()) return
-
-    //   wx.showLoading({
-    //     title:'正在保存',
-    //     mask:true
-    //   })
-    //   setTimeout(function(){
-    //     wx.hideLoading()
-    //   },10000)
-    //   self.pointer.localName = self.device.localName
-    //   //self.pointer.pwd = self.device.pwd
-    //   for (var i = self.pointer.lightList.length - 1; i >= 0; i--) {
-    //     self.pointer.lightList[i].name = self.device.lightList[i].name
-    //   }
-
-    //   // 保存
-    //   self.setPwd()
-    //   .then(function(res){
-    //     return self.setSwitchHis()
-    //   }).then(function(res){  
-    //     self.$apply()
-    //     wx.showToast({
-    //       title:'保存成功',
-    //       icon:"success",
-    //       mask:true,
-    //       duration:500
-    //     })
-    //     setTimeout(function(){
-    //       wx.navigateBack({
-    //         delta:1
-    //       })
-    //     },500)
-    //   }).catch(function(err){
-    //     console.log("保存出错",err)
-    //     wx.hideLoading()
-    //   })
-    // },
-
-
-
-    
+    }
   },
   mounted(e){
       console.log('参数', e)

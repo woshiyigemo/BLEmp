@@ -9,14 +9,20 @@ export default {
     wx.setStorageSync('logs', logs)
 
     console.log('app created and cache logs by setStorageSync')
-    // store.dispatch('getHisDevice')
+    store.dispatch('getHisDevice')
   },
   onShow(e){
     console.log('APP SHOW ',e)
+    
     BLE.getBluetoothAdapterState()
       .then(res => {
-
+        
       }).catch( err => {
+        console.log('获取蓝牙模块状态', err)
+        // 针对ios下
+        let res = wx.getSystemInfoSync()
+        console.log(res)
+
         if (!err.errInfo.available) {
           wx.showToast({
             title:'请确保手机开启了蓝牙',
@@ -26,6 +32,7 @@ export default {
         }
         BLE.openBluetoothAdapter()
       })
+    BLE.addCharacteristicValueChangeListener()
   },
   onHide(){
     console.log('APP HIDE ')

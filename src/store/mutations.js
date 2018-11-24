@@ -8,23 +8,29 @@ const mutations = {
     state.bleAvailable = false
   },
   // add switch
-  addSwitch (state, device) {
-    Vue.set(state.switchList, device.deviceId, device)
+  // addSwitch (state, device) {
+  //   Vue.set(state.switchList, device.deviceId, device)
+  // },
+  updateSwitch (state, device) {
+    if (state.switchList[device.deviceId]){
+      state.switchList[device.deviceId] = device
+    } else {
+      Vue.set(state.switchList, device.deviceId, device)
+      mutations.updateLocalSwitch(state, device)
+    }
   },
   // delete
   deleteSwitch (state, deviceId) {
     if (state.switchList[deviceId]) {
       Vue.delete(state.switchList, deviceId)
-      this.deleteLocalSwitch(state, deviceId)
+      mutations.deleteLocalSwitch(state, deviceId)
     }
   },
-  // change state 该方法只能修改status/localName/name
-  changeSwitchState (state, {deviceId, device}) {
+  changeSwitchName (state, {deviceId, localName}) {
     if (state.switchList[deviceId]) {
-      state.switchList[deviceId].status = device.status
-      state.switchList[deviceId].localName = device.localName
+      state.switchList[deviceId].localName = localName
     }
-    this.addLocalSwitch(state, device)
+    mutations.updateLocalSwitch(state, state.switchList[deviceId])
   },
   changeLightName (state, {deviceId, lightIndex, value }) {
     if (!state.switchList[deviceId]) {
@@ -35,9 +41,9 @@ const mutations = {
     }
     let device = state.switchList[deviceId]
     device.lightList[lightIndex].name = value
-    this.addLocalSwitch(state, device)
+    mutations.updateLocalSwitch(state, device)
   },
-  addLocalSwitch (state, device) {
+  updateLocalSwitch (state, device) {
     let dev = JSON.parse(JSON.stringify(device)) 
     dev.status = 3
     if(state.switchListLocal[dev.deviceId]){
@@ -55,7 +61,7 @@ const mutations = {
     }
   },
   getHisDevice (state) {
-    state.switchList = state.switchListLocal
+    state.switchList = JSON.parse(JSON.stringify(state.switchListLocal))
     console.log('已从历史中获取',state.switchListLocal)
   },
   // 二进制获取状态
@@ -122,6 +128,8 @@ const mutations = {
     // 版本号
     var version = hardwareVer.toString() + '.' + softwareVer.toString()
     device.version = version
+    console.log('changeLightState', this)
+    mutations.updateSwitch(state, device)
   }
 }
 

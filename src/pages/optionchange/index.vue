@@ -131,7 +131,15 @@ export default  {
             icon: 'none',
             title:'保存成功',
             duration:1000,
-            mask: true
+            mask: true,
+            success: () => {
+              wx.navigateBack({
+                delta: 1,
+                complete:() => {
+                    wx.hideLoading()
+                }
+              })
+            }
           })
         }).catch(err => {
           wx.showToast({
@@ -199,17 +207,12 @@ export default  {
                 resolve()
                 break
           case key=='localName':
-                let device = {
-                  deviceId: this.deviceId,
-                  status: this.switchCopy.status,
-                  localName: val
-                }
                 console.log('test2', this.options.key.toString())
-                this.$store.dispatch('changeSwitchState', { deviceId: device.deviceId, device: device })
+                this.$store.dispatch('changeSwitchName', { deviceId: this.deviceId, localName: val })
                 resolve()
                 break
           case key=='pwd':
-            console.log('test3', this.updatSwitchPwd, this.switchCopy, val)
+                console.log('test3', this.updatSwitchPwd, this.switchCopy, val)
                 this.updatSwitchPwd(this.switchCopy.deviceId, val)
                   .then(res => {
                     resolve()

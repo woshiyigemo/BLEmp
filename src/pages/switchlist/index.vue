@@ -15,7 +15,7 @@
             </div>
         </div>
         <div v-if="switchList.length > 0" v-for="(item, index) in switchList" :key="index"> 
-          <lampSwitch @afterConnectedSwitch="connectedSwitch" @deleteSwitch="deleteSwitch" :switchItem="item"></lampSwitch>
+          <lampSwitch @afterConnectedSwitch="connectedSwitch"  :switchItem="item"></lampSwitch>
         </div>
         <div class="noswitch" v-if="switchList.length == 0">
           <img class="noswitch-img" style="width:144px;height:144px;"  src="../../images/@3x/noswitch@3x.png"/>
@@ -111,10 +111,12 @@ export default {
     connectedSwitch (e) {
       if(this.isNavigating) return
       this.isNavigating = true
+      wx.showLoading()
       wx.navigateTo({
         url: '/pages/operator/main',
         complete:() => {
           this.isNavigating = false
+          wx.hideLoading()
         },
       })
     },
@@ -122,10 +124,12 @@ export default {
     goBack (){
       if(this.isNavigating) return
       this.isNavigating = true
+      wx.showLoading()
       wx.navigateTo({
         url: '/pages/operator/main',
         complete:() => {
           this.isNavigating = false
+          wx.hideLoading()
         },
       })
     },
