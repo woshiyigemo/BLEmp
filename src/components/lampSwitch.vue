@@ -95,9 +95,10 @@
           BLE.connectDevice(self.switchItem)
           .then((res) => {
             self.switchItem.status = 0
-            this.updatSwitchState(this.switchItem.deviceId)
+            return this.updatSwitchState(this.switchItem.deviceId)
+          }).then((res) => {
             this.$emit('afterConnectedSwitch',this.switchItem)
-            console.log(8989,this.switchItem)
+            console.log('点击链接设备成功',this.switchItem)
             wx.hideLoading()
           }).catch((err) => {
             console.log(9090)

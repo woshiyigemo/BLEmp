@@ -13,3 +13,10 @@ export const changeLightState = ({commit}, {deviceId, value}) => {
 export const changeLightName = ({commit}, {deviceId, lightIndex, value}) => {
   commit('changeLightName', {deviceId, lightIndex, value})
 }
+export const addLocalSwitch = ({commit}, device)=>{
+  commit('addLocalSwitch', device)
+}
+// 获取历史数据
+export const getHisDevice = ({commit})=>{
+  commit('getHisDevice')
+}

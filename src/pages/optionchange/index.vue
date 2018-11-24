@@ -111,13 +111,22 @@ export default  {
 
     // 保存\设置非记录在设备的参数
     saveChange (e) {
-      // if(!this.isStringValidate()) return
+      if(!this.isStringValidate()) return
       wx.showLoading({
         title:'正在保存',
         mask:true
       })
       this.saveOptions(this.options.value)
         .then(res => {
+          wx.getStorage({
+            key:'switchList',
+            success:(res) => {
+              console.log('storage结果',res)
+            },
+            fail:(err) => {
+              console.log('storage错误',err)
+            }
+          })
           wx.showToast({
             icon: 'none',
             title:'保存成功',
@@ -149,16 +158,16 @@ export default  {
         str:'没有找到对应的字段',
         isValidate:false
       } 
-      
-      switch (this.options.key.toString())
+      let key = this.options.key.toString() 
+      switch (true)
       {
-        case 'lightName':
+        case key == 'lightName':
               res = isNameValid(this.options.value.trim())
               break
-        case 'localName':
+        case key == 'localName':
               res = isNameValid(this.options.value.trim())
               break
-        case 'pwd':
+        case key == 'pwd':
               res = isPwdValid(this.options.value.trim())
               break       
       }

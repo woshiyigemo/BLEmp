@@ -1,5 +1,6 @@
 <script>
 import BLE from '@/utils/BLEservice.js'
+import store from '@/store'
 export default {
   created () {
     // 调用API从本地缓存中获取数据
@@ -8,6 +9,7 @@ export default {
     wx.setStorageSync('logs', logs)
 
     console.log('app created and cache logs by setStorageSync')
+    // store.dispatch('getHisDevice')
   },
   onShow(e){
     console.log('APP SHOW ',e)
@@ -17,7 +19,8 @@ export default {
       }).catch( err => {
         if (!err.errInfo.available) {
           wx.showToast({
-            title:'请确保手机开启了蓝牙'
+            title:'请确保手机开启了蓝牙',
+            icon: 'none',
           })
           return
         }

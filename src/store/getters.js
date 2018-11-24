@@ -20,3 +20,9 @@ export const getSwitchById = (state, getters) => {
     return state.switchList[deviceId]
   }
 }
+export const getLocalSwitchById = (state, getters) => {
+  return (deviceId) => {
+    if (!deviceId || !state.switchListLocal[deviceId]) return null
+    return state.switchListLocal[deviceId]
+  }
+}

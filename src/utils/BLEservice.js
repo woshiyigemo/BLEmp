@@ -31,6 +31,7 @@ const connectDevice = function (device) {
         return getCharacter(device.deviceId, res.services)
       }).then((res) => {
         console.log('连接success', device.deviceId, res)
+        store.dispatch('addLocalSwitch', device)
         resolve(res)
       }).catch((err) => {
         reject({errMsg: '连接蓝牙设备发生错误:' + device.deviceId, errInfo: err})
@@ -137,6 +138,7 @@ const createBLEConnection = function (device) {
     wx.createBLEConnection({
       deviceId: device.deviceId,
       success: function (res) {
+        store.dispatch('addLocalSwitch',device)
         resolve(res)
       },
       fail: function (res) {
@@ -267,7 +269,8 @@ const addCharacteristicValueChangeListener = function() {
 const foundDevice = function () {
   wx.onBluetoothDeviceFound(res => {
     var dev = res.devices[0]
-    if (dev.name === 'LOLAR_SWITCH') {
+    // 如果没有在历史记录中
+    if (dev.name === 'LOLAR_SWITCH' && !store.getters.getLocalSwitchById(res.devices[0].deviceId)) {
       dev = Comm.createSwitch(dev)
       console.log('发现设备', dev)
       store.dispatch('addSwitch', dev)

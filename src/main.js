@@ -4,7 +4,6 @@ import store from './store'
 import './style/app.css'
 import './style/weui.css'
 import '../static/weui.less'
-console.log(7777888)
 Vue.prototype.$store = store
 Vue.config.productionTip = false
 App.mpType = 'app'

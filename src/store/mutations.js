@@ -15,6 +15,7 @@ const mutations = {
   deleteSwitch (state, deviceId) {
     if (state.switchList[deviceId]) {
       Vue.delete(state.switchList, deviceId)
+      this.deleteLocalSwitch(state, deviceId)
     }
   },
   // change state 该方法只能修改status/localName/name
@@ -23,6 +24,7 @@ const mutations = {
       state.switchList[deviceId].status = device.status
       state.switchList[deviceId].localName = device.localName
     }
+    this.addLocalSwitch(state, device)
   },
   changeLightName (state, {deviceId, lightIndex, value }) {
     if (!state.switchList[deviceId]) {
@@ -33,6 +35,28 @@ const mutations = {
     }
     let device = state.switchList[deviceId]
     device.lightList[lightIndex].name = value
+    this.addLocalSwitch(state, device)
+  },
+  addLocalSwitch (state, device) {
+    let dev = JSON.parse(JSON.stringify(device)) 
+    dev.status = 3
+    if(state.switchListLocal[dev.deviceId]){
+      state.switchListLocal[dev.deviceId] = dev
+      console.log('已从历史中更新',state.switchListLocal)
+    } else {
+      Vue.set(state.switchListLocal, dev.deviceId, dev)
+      console.log('已添加到历史中',state.switchListLocal)
+    }
+  },
+  deleteLocalSwitch (state, deviceId) {
+    if (state.switchListLocal[deviceId]) {
+      Vue.delete(state.switchListLocal, deviceId)
+      console.log('已从历史中删除',state.switchListLocal)
+    }
+  },
+  getHisDevice (state) {
+    state.switchList = state.switchListLocal
+    console.log('已从历史中获取',state.switchListLocal)
   },
   // 二进制获取状态
   changeLightState (state, {deviceId, value}) {
