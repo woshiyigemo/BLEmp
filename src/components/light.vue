@@ -13,7 +13,7 @@
 import Comm from '@/utils/common'
 import Config from '@/utils/Config.js'
 import BLE from '@/utils/BLEservice'
-
+import { mapState, mapGetters} from 'vuex'
   export default {
     props:{
       // 灯对象
@@ -39,10 +39,23 @@ import BLE from '@/utils/BLEservice'
       }
     },
     computed:{
-      lightColor:function() {
-        console.log('获取灯颜色:',this.light.status, this.lightIndex,Comm.getColorByIndex(this.lightIndex))
-        return  'background-color:' + Comm.getColorByIndex(this.lightIndex) + ';'
-      }
+      // lightColor:function() {
+      //   console.log('获取灯颜色:',this.light.status, this.lightIndex,Comm.getColorByIndex(this.lightIndex))
+      //   return  'background-color:' + Comm.getColorByIndex(this.lightIndex) + ';'
+      // },
+      ...mapState({
+        lightColor (state) {
+          return 'background-color:' + Comm.getColorByIndex(this.lightIndex) + ';'
+        },
+        // light (state) {
+        //   let mylight = state.switchList[this.deviceId].lightList[this.lightIndex]
+        //   console.log('正在更新light',mylight)
+        //   return mylight
+        // },
+      })
+    },
+    watch:{
+      
     },
     methods:{
       // 开关灯

@@ -77,6 +77,7 @@ export default {
       // 先断开所有设备并关闭蓝牙适配器(安卓)
       this.disConnAll()
       .then((res) => {
+        wx.hideLoading()
          console.log("尝试断开设备完毕")
          return this.scanDeviceManual()
       }).then((res) => {
@@ -112,13 +113,16 @@ export default {
       if(this.isNavigating) return
       this.isNavigating = true
       wx.showLoading()
-      wx.navigateTo({
-        url: '/pages/operator/main',
-        complete:() => {
-          this.isNavigating = false
-          wx.hideLoading()
-        },
-      })
+      setTimeout(() => {
+        wx.navigateTo({
+          url: '/pages/operator/main',
+          complete:() => {
+            console.log('跳转已完成')
+            this.isNavigating = false
+            wx.hideLoading()
+          },
+        })
+      }, 0)
     },
     // 去控制页
     goBack (){

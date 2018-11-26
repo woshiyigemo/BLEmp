@@ -170,46 +170,41 @@ const getService = function (deviceId) {
 // 需要获取所有服务后才可单独使用对应服务的特征值
 // 双平台统一在建立链接后先执行 getBLEDeviceServices 与 getBLEDeviceCharacteristics 后再进行与蓝牙设备的数据交互
 const getCharacter = function (deviceId, services) {
-  // return new Promise((resolve, reject) => {  
-    var servicePromisArr = []
-    services.forEach(function (item, index, array) {
-      servicePromisArr.push(
-        new Promise(function (reso, rej) {
-          wx.getBLEDeviceCharacteristics({
-            deviceId: deviceId,
-            serviceId: item.uuid,
-            success: function (res) {
-              console.log('当前设备的特征值', res)
-              // 如果支持notify,则开启notify
-              res.characteristics.forEach((o, i) => {
-                if (o.properties.notify) {
-                  wx.notifyBLECharacteristicValueChange({
-                    state: true,
-                    deviceId: res.deviceId,
-                    serviceId: res.serviceId,
-                    characteristicId: o.uuid
-                  })
-                }
-              })
-              reso(res)
-            },
-            fail: function (err) {
-              rej({errMsg: '获取蓝牙设备特征值错误', errInfo: err})
-            }
-          })
+  var servicePromisArr = []
+  services.forEach(function (item, index, array) {
+    servicePromisArr.push(
+      new Promise(function (reso, rej) {
+        wx.getBLEDeviceCharacteristics({
+          deviceId: deviceId,
+          serviceId: item.uuid,
+          success: function (res) {
+            console.log('当前设备的特征值', res)
+            // 如果支持notify,则开启notify
+            res.characteristics.forEach((o, i) => {
+              if (o.properties.notify) {
+                wx.notifyBLECharacteristicValueChange({
+                  state: true,
+                  deviceId: res.deviceId,
+                  serviceId: res.serviceId,
+                  characteristicId: o.uuid
+                })
+              }
+            })
+            reso(res)
+          },
+          fail: function (err) {
+            rej({errMsg: '获取蓝牙设备特征值错误', errInfo: err})
+          }
         })
-      )
-    })
-    console.log(11111111,servicePromisArr)
-    return Promise.all(servicePromisArr).then(res => {
-        // resolve(res)
-        Promise.resolve(res)
-        console.log('获取蓝牙设备特征值错误成功',res)
-      }).catch(err => {
-        Promise.reject({errMsg: '获取蓝牙设备特征值错误', errInfo: err})
-        // reject({errMsg: '获取蓝牙设备特征值错误', errInfo: err})
       })
-  // })
+    )
+  })
+  return Promise.all(servicePromisArr).then(res => {
+      Promise.resolve(res)
+      console.log('获取蓝牙设备特征值错误成功',res)
+    }).catch(err => {
+      Promise.reject({errMsg: '获取蓝牙设备特征值错误', errInfo: err})
+    })
 }
 
 // 读取特征值

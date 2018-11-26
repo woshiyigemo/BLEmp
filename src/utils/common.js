@@ -44,6 +44,8 @@ const Switch = function (dev) {
 const Light = function (index) {
   this.id = Math.random(0,1).toString(36).slice(2)
   this.name = '灯' + (index + 1).toString()
+  this.visible = false
+  this.status = 0
 }
 
 const createSwitch = function (dev) {

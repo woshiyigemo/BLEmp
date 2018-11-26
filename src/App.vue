@@ -1,7 +1,14 @@
 <script>
 import BLE from '@/utils/BLEservice.js'
+import BLEpub from '@/mixin/BLEpub.js'
 import store from '@/store'
 export default {
+  data(){
+    return {
+      timmer:null
+    }
+  },
+  mixins:[BLEpub],
   created () {
     // 调用API从本地缓存中获取数据
     const logs = wx.getStorageSync('logs') || []
@@ -16,7 +23,9 @@ export default {
     
     BLE.getBluetoothAdapterState()
       .then(res => {
-        
+          // this.timmer = setTimeout(() => {
+          //   this.
+          // }, 1000)
       }).catch( err => {
         console.log('获取蓝牙模块状态', err)
         // 针对ios下

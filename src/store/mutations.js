@@ -14,9 +14,22 @@ const mutations = {
   updateSwitch (state, device) {
     if (state.switchList[device.deviceId]){
       state.switchList[device.deviceId] = device
+      // Vue.set(state.switchList, device.deviceId, device)
+      console.log('正在更新灯状态1', device, state.switchList)
+    } else {
+      Vue.set(state.switchList, device.deviceId, device)
+      console.log('正在更新灯状态2', device, state.switchList)
+    }
+  },
+  updateConnectedSwitch (state, device) {
+    if (state.switchList[device.deviceId]){
+      state.switchList[device.deviceId] = device
+      // Vue.set(state.switchList, device.deviceId, device)
+      console.log('正在更新灯状态111', device, state.switchList)
     } else {
       Vue.set(state.switchList, device.deviceId, device)
       mutations.updateLocalSwitch(state, device)
+      console.log('正在更新灯状态222', device, state.switchList)
     }
   },
   // delete
@@ -45,6 +58,7 @@ const mutations = {
   },
   updateLocalSwitch (state, device) {
     let dev = JSON.parse(JSON.stringify(device)) 
+    console.log('当前存储的设备', device)
     dev.status = 3
     if(state.switchListLocal[dev.deviceId]){
       state.switchListLocal[dev.deviceId] = dev
@@ -128,8 +142,9 @@ const mutations = {
     // 版本号
     var version = hardwareVer.toString() + '.' + softwareVer.toString()
     device.version = version
-    console.log('changeLightState', this)
-    mutations.updateSwitch(state, device)
+    console.log('changeLightState222', this)
+    mutations.updateConnectedSwitch(state, device)
+    // state.switchList[deviceId] = device
   }
 }
 

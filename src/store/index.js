@@ -13,6 +13,7 @@ export default new Vuex.Store({ // eslint-disable-line
   plugins:[
     // createPersistedState()
     createPersistedState({
+      key: 'yourSwitchListLocal',
       paths: ['switchListLocal'],
       storage: {
         getItem: key => wx.getStorageSync(key),

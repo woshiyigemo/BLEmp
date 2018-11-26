@@ -73,7 +73,7 @@
               } else {
 
                 // 删除开关
-                this.$store.dispatch('deleteSwitch')
+                this.$store.dispatch('deleteSwitch', this.switchItem.deviceId)
                 console.log('删除设备成功1')
                 this.$emit('deleteSwitch',this.switchItem)
                 wx.hideLoading()

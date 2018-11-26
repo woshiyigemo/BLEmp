@@ -15,7 +15,7 @@ export default {
   methods: {
     // 断开所有
     disConnAll () {
-      var sList = store.getters.switchArr
+      var sList = store.getters.switchListArr
       var promiseArr = []
       sList.forEach(function (o, i) {
         if (o.status === 0) {
@@ -61,6 +61,7 @@ export default {
             return BLE.startBluetoothDevicesDiscovery()
           }).then(function (res) {
             BLE.foundDevice()
+            resolve('end')
           }).catch(function (err) {
             wx.showToast({
               title: err.errMsg
@@ -79,7 +80,7 @@ export default {
       return new Promise((resolve, reject) => {
         BLE.readBLECharacteristicValue(dId, sId, cId)
         .then(res => {
-          console.log('更新开关状态成功')
+          console.log('更新开关状态成功',res)
           resolve(res)
         }).catch(err => {
           console.log('更新开关状态失败', err)

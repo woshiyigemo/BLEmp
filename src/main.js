@@ -3,7 +3,7 @@ import App from './App'
 import store from './store'
 import './style/app.css'
 import './style/weui.css'
-import '../static/weui.less'
+// import '../static/weui.less'
 Vue.prototype.$store = store
 Vue.config.productionTip = false
 App.mpType = 'app'

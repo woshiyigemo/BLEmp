@@ -16,6 +16,8 @@
       v-for="(light, index) in lamp.lightList" 
        :key="index">
       <lightItem :deviceId="lamp.deviceId" :light="light" :lightIndex="index"></lightItem>
+      <!-- <lightItem :deviceId="lamp.deviceId" :lightIndex="index"></lightItem> -->
+    </div>
     </div>
   </div>
  </template>
@@ -66,11 +68,6 @@
 </script>
 
 <style scoped lang="less">
-  .container{
-
-  }
-  
-
   .userinfo {
     display: flex;
     flex-direction: column;
