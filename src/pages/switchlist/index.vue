@@ -42,6 +42,11 @@ import BLEpub from '@/mixin/BLEpub.js'
 import BLE from '@/utils/BLEservice'
 import { mapState, mapGetters} from 'vuex'
 // console.log(7878898,BLEpub)/
+// 
+const  sortNumber = (a,b) =>
+{
+    return b.status - a.status
+}
 export default {
   data () {
     return {
@@ -51,14 +56,22 @@ export default {
   },
   computed:{
     ...mapState({
-      switchList:state => {
-        var slist = []
-        for (var i in state.switchList) {
-          if (state.switchList[i].deviceId) {
-            slist.push(state.switchList[i])
-          }
-        }
-        return slist
+      switchList(state) {
+        // let hislist = [],newlist = [],curlist = [], slist = []
+        // for (var i in state.switchList) {
+        //   if (state.switchList[i].deviceId && state.switchList[i].status == 3) {
+        //     hislist.push(state.switchList[i])
+        //   }else if (state.switchList[i].deviceId && state.switchList[i].status == 2) {
+        //     newlist.push(state.switchList[i])
+        //   }else if (state.switchList[i].deviceId && state.switchList[i].status == 1) {
+        //     curlist.push(state.switchList[i])
+        //   }
+        // }
+         
+        // console.log('列表更新触发', curlist.concat(newlist,hislist))
+        // return slist = curlist.concat(newlist,hislist)
+        let slist = this.$store.getters.switchListArr
+        return slist.sort(sortNumber)
       }
     })
   },
@@ -77,7 +90,6 @@ export default {
       // 先断开所有设备并关闭蓝牙适配器(安卓)
       this.disConnAll()
       .then((res) => {
-        wx.hideLoading()
          console.log("尝试断开设备完毕")
          return this.scanDeviceManual()
       }).then((res) => {
@@ -85,27 +97,26 @@ export default {
         wx.hideLoading()
       }).catch(function(err){
         console.log("新设备扫描设备发生错误1",err)
-        // this.errHandler(err)
         wx.hideLoading()
       })
     },
     // 自动刷新
     refreshAutoScan (e) {
+      if(this.isRefreshing) return
       var self = this
       wx.showLoading({
-        title:"正在刷新列表",
+        title:"正在搜索设备",
         mask:true
       })
       this.isRefreshing = true
-      // this.disConnAll()
-      // .then(function(res){
-      //   return self.scanDevice()
-      // }).then(function (){
-      //   this.isScanning = false
-      // }).catch(function(err){
-      //   this.isScanning = false
-      //   self.errHandler(err)
-      // })
+      this.disConnAll()
+      .then(function(res){
+        return self.scanDevice()
+      }).then(function (){
+        this.isRefreshing = false
+      }).catch(function(err){
+        this.isRefreshing = false
+      })
       console.log("refreshing")
     },
     // 连接开关完毕 
@@ -144,6 +155,7 @@ export default {
   },
   mounted(e){
     console.log('参数', e)
+    this.scanBluetooth()
   },
   created () {
     // 调用应用实例的方法获取全局数据

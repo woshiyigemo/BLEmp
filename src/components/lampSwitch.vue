@@ -17,13 +17,14 @@
   import BLE from '@/utils/BLEservice'
   import store from '@/store'
   import BLEpub from '@/mixin/BLEpub.js'
+import { setInterval, clearInterval } from 'timers';
   export default {
     props:{
-      // 灯对象
+      // 开关对象
       switchItem: {
         type:Object,
         default: {
-          deviceId:'0000-0000',
+          deviceId: null,
           localName:'',
           status:3
         }
@@ -32,7 +33,6 @@
 
     data(){
       return {
-
       }
     },
     mixins:[BLEpub],
@@ -65,6 +65,7 @@
                 }).then((res) => {
                   console.log('删除设备成功0', res)
                   // 删除开关
+                  this.$store.dispatch('deleteSwitch', this.switchItem.deviceId)
                   this.$emit('deleteSwitch',this.switchItem)
                   wx.hideLoading()
                 }).catch((err) => {  
@@ -97,8 +98,7 @@
         }
         // 未连接或新设备进行连接
         else if(this.switchItem.status == 1 || 
-                this.switchItem.status == 2 ||
-                this.switchItem.status == 3){
+                this.switchItem.status == 2 ){
           wx.showLoading({
             title:"正在连接",
             mask:true
@@ -112,18 +112,32 @@
             console.log('点击链接设备成功',this.switchItem)
             wx.hideLoading()
           }).catch((err) => {
-            console.log(9090)
+            console.log('点击链接设备失败',err)
+            if(err && err.errInfo.errCode === 10002) {
+              wx.showToast({
+                title:'未搜索到对应设备，请尝试靠近设备',
+                icon: 'none',
+                duration:1000
+              })
+            }
             wx.hideLoading()
           })
         }
         // 离线状态直接返回
         else {
           wx.showModal({
-            content:'未扫描到该设备',
+            content:'未扫描到该设备，请尝试靠近设备后重新扫描',
             showCancel:false
           })
         }
-      }
+      },
+    },
+    onHide(){
+      // clearInterval(this.timmer)
+      console.log('pagehide')
+    },
+    deactivated(){
+      // clearInterval(this.timmer)
     }
   }
 </script>

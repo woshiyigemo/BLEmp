@@ -7,35 +7,41 @@ const mutations = {
   closeBle (state) {
     state.bleAvailable = false
   },
-  // add switch
-  // addSwitch (state, device) {
-  //   Vue.set(state.switchList, device.deviceId, device)
-  // },
   updateSwitch (state, device) {
     if (state.switchList[device.deviceId]){
       state.switchList[device.deviceId] = device
-      // Vue.set(state.switchList, device.deviceId, device)
-      console.log('正在更新灯状态1', device, state.switchList)
+      console.log('正在更新开关状态1', device, state.switchList)
     } else {
       Vue.set(state.switchList, device.deviceId, device)
-      console.log('正在更新灯状态2', device, state.switchList)
+      console.log('正在更新开关状态2', device, state.switchList)
     }
   },
   updateConnectedSwitch (state, device) {
     if (state.switchList[device.deviceId]){
       state.switchList[device.deviceId] = device
-      // Vue.set(state.switchList, device.deviceId, device)
-      console.log('正在更新灯状态111', device, state.switchList)
+      console.log('正在更新开关状态111', device, state.switchList)
     } else {
       Vue.set(state.switchList, device.deviceId, device)
       mutations.updateLocalSwitch(state, device)
-      console.log('正在更新灯状态222', device, state.switchList)
+      console.log('正在更新开关状态222', device, state.switchList)
+    }
+  },
+  connSwitch (state, device) {
+    state.curSwitchId = device.deviceId
+    console.log('已连接id',state.curSwitchId)
+    mutations.updateLocalSwitch(state, state.switchList[device.deviceId])
+  },
+  disconSwitch (state, deviceId) {
+    if (state.switchList[deviceId]) {
+      state.switchList[deviceId].status = 3
+      if(deviceId === state.curSwitchId) state.curSwitchId = null
     }
   },
   // delete
   deleteSwitch (state, deviceId) {
     if (state.switchList[deviceId]) {
       Vue.delete(state.switchList, deviceId)
+      if(deviceId === state.curSwitchId) state.curSwitchId = null
       mutations.deleteLocalSwitch(state, deviceId)
     }
   },
@@ -62,7 +68,7 @@ const mutations = {
     dev.status = 3
     if(state.switchListLocal[dev.deviceId]){
       state.switchListLocal[dev.deviceId] = dev
-      console.log('已从历史中更新',state.switchListLocal)
+      console.log('已在缓存中更新',state.switchListLocal)
     } else {
       Vue.set(state.switchListLocal, dev.deviceId, dev)
       console.log('已添加到历史中',state.switchListLocal)
@@ -71,12 +77,10 @@ const mutations = {
   deleteLocalSwitch (state, deviceId) {
     if (state.switchListLocal[deviceId]) {
       Vue.delete(state.switchListLocal, deviceId)
-      console.log('已从历史中删除',state.switchListLocal)
     }
   },
   getHisDevice (state) {
     state.switchList = JSON.parse(JSON.stringify(state.switchListLocal))
-    console.log('已从历史中获取',state.switchListLocal)
   },
   // 二进制获取状态
   changeLightState (state, {deviceId, value}) {
@@ -142,9 +146,10 @@ const mutations = {
     // 版本号
     var version = hardwareVer.toString() + '.' + softwareVer.toString()
     device.version = version
-    console.log('changeLightState222', this)
+    console.log('changeLightState', this)
     mutations.updateConnectedSwitch(state, device)
-    // state.switchList[deviceId] = device
+    // mutations.updateSwitch(state, device)
+    state.curSwitchId = device.deviceId
   }
 }
 

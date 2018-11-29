@@ -21,3 +21,9 @@ export const updateLocalSwitch = ({commit}, device)=>{
 export const getHisDevice = ({commit})=>{
   commit('getHisDevice')
 }
+export const connSwitch = ({commit}, device) => {
+  commit('connSwitch', device)
+}
+export const disconSwitch = ({commit}, deviceId) => {
+  commit('disconSwitch', deviceId)
+}

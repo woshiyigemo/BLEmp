@@ -14,12 +14,13 @@ export default {
   mounted () {},
   methods: {
     // 断开所有
+    // params
     disConnAll () {
       var sList = store.getters.switchListArr
       var promiseArr = []
       sList.forEach(function (o, i) {
         if (o.status === 0) {
-          var a = BLE.disconDevice(o)
+          var a = BLE.disconDevice(o.deviceId)
           promiseArr.push(a)
         }
       })
@@ -46,9 +47,9 @@ export default {
             //   return BLE.closeBluetoothAdapter()
             // })
             .then(res => {
-              resolve('end')
+              resolve(res)
             }).catch(err => {
-              resolve('end')
+              resolve(err)
               console.log('停止扫描出错', err)
             })
         }, 6000)
@@ -57,12 +58,15 @@ export default {
           .then(res => {
             return BLE.getBluetoothAdapterState()
           }).then(res =>{
+            console.log(223)
             BLE.addCharacteristicValueChangeListener()
             return BLE.startBluetoothDevicesDiscovery()
           }).then(function (res) {
+            console.log(333)
             BLE.foundDevice()
-            resolve('end')
+            // resolve(res)
           }).catch(function (err) {
+            console.log(443)
             wx.showToast({
               title: err.errMsg
             })
@@ -70,10 +74,10 @@ export default {
           })
       })
     },
+
     // 更新
     updatSwitchState (deviceId) {
       if (!deviceId || !store.getters.getSwitchById(deviceId)) return
-      console.log(1212, store.getters.getSwitchById(deviceId))
       let dId = deviceId
       let sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE
       let cId = Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC

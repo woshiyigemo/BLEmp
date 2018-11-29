@@ -31,7 +31,7 @@ const connectDevice = function (device) {
         return getCharacter(device.deviceId, res.services)
       }).then((res) => {
         console.log('连接success', device.deviceId, res)
-        store.dispatch('updateLocalSwitch', device)
+        store.dispatch('connSwitch',device)
         resolve(res)
       }).catch((err) => {
         reject({errMsg: '连接蓝牙设备发生错误:' + device.deviceId, errInfo: err})
@@ -44,7 +44,7 @@ const disconDevice = function (deviceId) {
     wx.closeBLEConnection({
       deviceId: deviceId,
       success: function (res) {
-        store.dispatch('deleteSwitch',deviceId)
+        store.dispatch('disconSwitch', deviceId)
         console.log('断开蓝牙设备成功', deviceId)
         resolve(res)
       },
@@ -265,16 +265,27 @@ const addCharacteristicValueChangeListener = function() {
 }
 
 const foundDevice = function () {
+  
   wx.onBluetoothDeviceFound(res => {
     var dev = res.devices[0]
-    console.log('发现设备', dev)
+    // console.log('发现设备', dev)
     if (dev.name.toUpperCase() !== 'LOLAR_SWITCH') return
-    dev = Comm.createSwitch(dev)
     // 如果未在历史记录中,则加入
+    console.log('触发', dev)
     if (!store.getters.getLocalSwitchById(res.devices[0].deviceId)) {
+      console.log('s222')
+      dev = Comm.createSwitch(dev)
+      store.dispatch('updateSwitch', dev)
+    } 
+    // 如果已在历史列表中则标为未连接
+    else {
+      console.log('s111')
+      dev = store.getters.getLocalSwitchById(res.devices[0].deviceId)
+      dev.status = 1
       store.dispatch('updateSwitch', dev)
     } 
   })
+  console.log('触发1111')
 }
 
 export default {

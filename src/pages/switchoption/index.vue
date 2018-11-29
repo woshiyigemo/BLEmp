@@ -40,19 +40,19 @@
               <div class="weui-cell weui-cell_switch"  style="padding-right:5px;">
                   <div class="weui-cell__bd">强背光</div>
                   <div class="weui-cell__ft">
-                      <switch  :checked="!switchCopy.backlightStrong"  @change="changeBacklightStrongState"/>
+                      <switch  :checked="!switchCopy.backlightStrong" @change="changeBacklightStrongState"/>
                   </div>
               </div>
               <div class="weui-cell weui-cell_switch"  style="padding-right:5px;">
                   <div class="weui-cell__bd">弱背光</div>
                   <div class="weui-cell__ft">
-                      <switch  :checked="!switchCopy.backlightWeak"  @change="changeBacklightWeakState"/>
+                      <switch  :checked="!switchCopy.backlightWeak" @change="changeBacklightWeakState"/>
                   </div>
               </div>
               <div class="weui-cell weui-cell_switch"  style="padding-right:5px;">
                   <div class="weui-cell__bd">信号增强</div>
                   <div class="weui-cell__ft">
-                      <switch  :checked="!!switchCopy.signalStrong"  @change="changeSignalState"/>
+                      <switch  :checked="!!switchCopy.signalStrong" @change="changeSignalState"/>
                   </div>
               </div>
 	        </div>
@@ -89,8 +89,9 @@ export default  {
 
   data: function(){
     return {
-        isNavigating:false,
-        framewareUrl:'http://x.hao61.net/bluetemp/LOLAR-SW-180317.bin'
+        isInteracting: false,
+        isNavigating: false,
+        framewareUrl: 'http://x.hao61.net/bluetemp/LOLAR-SW-180317.bin',
     }
   },
   computed: {
@@ -142,7 +143,142 @@ export default  {
                 wx.hideLoading()
             },
         })
-    }
+    },
+    // 变动静音选项
+    changeMuteState(e){
+        if(this.isInteracting) return 
+        wx.showLoading({
+            title:"正在写入",
+            mask:true
+        })
+        console.log("当前静音状态：",e.target.value)
+        this.isInteracting = true
+        var mute = e.target.value == true?1:0,
+            data = 0x05
+        this.setDeviceOption(data)
+        .then((res) => {
+            wx.showToast({
+                title:"修改成功",
+                icon: 'none',
+                duration:1000
+            })
+            this.isInteracting = false
+        }).catch((err) => {
+            wx.showToast({
+                title:"修改失败",
+                icon: 'none',
+                duration:1000
+            })
+            this.isInteracting = false
+        })  	
+    },
+
+    changeBacklightStrongState(e){
+        if(this.isInteracting) return 
+        wx.showLoading({
+            title:"正在写入",
+            mask:true
+        })
+        console.log("当前强背光状态：",e.target.value)
+        this.isInteracting = true
+        var mute = e.target.value == true?1:0,
+            data = 0x07
+        this.setDeviceOption(data)
+        .then((res) => {
+            wx.showToast({
+                title:"修改成功",
+                icon: 'none',
+                duration:1000
+            })
+            this.isInteracting = false
+        }).catch((err) => {
+            wx.showToast({
+                title:"修改失败",
+                icon: 'none',
+                duration:1000
+            })
+            this.isInteracting = false
+        })  	
+    },
+    changeBacklightWeakState(e){
+        if(this.isInteracting) return 
+        wx.showLoading({
+            title:"正在写入",
+            mask:true
+        })
+        console.log("当前弱背光状态：",e.target.value)
+        this.isInteracting = true
+        var mute = e.target.value == true?1:0,
+            data = 0x06
+        this.setDeviceOption(data)
+        .then((res) => {
+            wx.showToast({
+                title:"修改成功",
+                icon: 'none',
+                duration:1000
+            })
+            this.isInteracting = false
+        }).catch((err) => {
+            wx.showToast({
+                title:"修改失败",
+                icon: 'none',
+                duration:1000
+            })
+            this.isInteracting = false
+        })  	
+    },  
+
+    changeSignalState(e){
+        if(this.isInteracting) return 
+        wx.showLoading({
+            title:"正在写入",
+            mask:true
+        })
+        console.log("当前信号强度：",e)
+        this.isInteracting = true
+        var mute = e.target.value == true?1:0,
+            data = 0x08
+        this.setDeviceOption(data)
+        .then((res) => {
+            wx.showToast({
+                title:"修改成功",
+                icon: 'none',
+                duration:1000
+            })
+            this.isInteracting = false
+        }).catch((err) => {
+            wx.showToast({
+                title:"修改失败",
+                icon: 'none',
+                duration:1000
+            })
+            this.isInteracting = false
+        })  	
+    },  
+    // 设置参数
+    setDeviceOption(value){
+        var dId = this.deviceId,
+            sId = Config.SampleGattAttributes.SIMPLEIO_SERVICE,
+            cId = Config.SampleGattAttributes.SIMPLEIO_CHAR1_CHARACTERISTIC
+
+        var val = new ArrayBuffer(1),
+            dataView = new DataView(val)
+            dataView.setUint8(0,value)
+        return new Promise((resolve,reject) => {
+            BLE.writeBLECharacteristicValue(dId,sId,cId,val)
+            .then((res) => {
+                console.log("设置设置成功")
+                var readcId = Config.SampleGattAttributes.SIMPLEIO_CHAR2_CHARACTERISTIC
+                return  BLE.readBLECharacteristicValue(dId, sId, readcId)
+            }).then((res) => {
+                console.log('读取成功', res)
+                resolve(res)
+            }).catch((err) => {
+                console.log('读取失败', err)
+                reject(err)
+            })
+        })
+    }, 
   },
   mounted(e){
       console.log('参数', e)
