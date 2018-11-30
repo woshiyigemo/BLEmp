@@ -4,13 +4,16 @@
     <div class="media-wrapper">
       <div class="screen-shot-wrapper">
         <div class="topline">
-            <div class="lefticon" @tap="scanBluetooth">
+            <!-- <div class="lefticon" @tap="scanBluetooth">
               <img src="../../images/@3x/add@3x.png"/>
-            </div>
+            </div> -->
             <div class="title">
               设备列表
             </div>
-            <div class="righticon" @tap="refreshAutoScan">
+            <!-- <div class="righticon" @tap="refreshAutoScan">
+              <img :class="isRefreshing ? 'icon-rotate' : ''" src="../../images/@3x/refresh@3x.png"/>
+            </div> -->
+            <div class="righticon" @tap="scanBluetooth">
               <img :class="isRefreshing ? 'icon-rotate' : ''" src="../../images/@3x/refresh@3x.png"/>
             </div>
         </div>
@@ -96,8 +99,16 @@ export default {
         console.log("新设备扫描完毕",res)
         wx.hideLoading()
       }).catch(function(err){
+        if (err.errMsg) {
+          wx.showToast({
+            title: err.errMsg,
+            icon:'none',
+            duration: 2000
+          })
+        } else {
+          wx.hideLoading()
+        }
         console.log("新设备扫描设备发生错误1",err)
-        wx.hideLoading()
       })
     },
     // 自动刷新

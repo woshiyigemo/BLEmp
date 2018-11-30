@@ -64,7 +64,7 @@ const openBluetoothAdapter = function() {
         resolve(res)
       },
       fail: function(err) {
-        reject({errMsg: '请确保开启了蓝牙功能', errInfo: err})
+        reject({errMsg: '请确保您的手机开启了蓝牙功能', errInfo: err})
       }
     })
   })

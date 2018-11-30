@@ -66,12 +66,9 @@ export default {
             BLE.foundDevice()
             // resolve(res)
           }).catch(function (err) {
-            console.log(443)
-            wx.showToast({
-              title: err.errMsg
-            })
+            console.log(443,err)
             reject(err)
-          })
+          }) 
       })
     },
 
